@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.WeishangqiangMapper">
+	<resultMap id="BaseResultMap" type="cn.xjwlfw.yeshenghuo.model.Weishangqiang">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="pause" jdbcType="VARCHAR" property="pause" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
+		<result column="location" jdbcType="VARCHAR" property="location" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="bg_url" jdbcType="VARCHAR" property="bgUrl" />
+		<result column="stop_words" jdbcType="VARCHAR" property="stopWords" />
+		<result column="access_account" jdbcType="VARCHAR" property="accessAccount" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="big_screen_url" jdbcType="VARCHAR" property="bigScreenUrl" />
+		<result column="mobile_screen_url" jdbcType="VARCHAR" property="mobileScreenUrl" />
+		<result column="font_size" jdbcType="VARCHAR" property="fontSize" />
+    	<result column="available" jdbcType="TINYINT" property="available" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, pause, name, qrcode, location, title, bg_url, stop_words,
+		access_account,
+		create_time,
+		big_screen_url, mobile_screen_url, font_size, available
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from weishangqiang
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		weishangqiang
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="cn.xjwlfw.yeshenghuo.model.Weishangqiang">
+		insert into weishangqiang (id,
+		pause, name, qrcode
+		location, title, bg_url,
+		stop_words, access_account,
+		create_time,
+		big_screen_url, mobile_screen_url, font_size, 
+      	available)
+		values
+		(#{id,jdbcType=INTEGER}, #{pause,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR}, #{qrcode,jdbcType=VARCHAR},
+		#{location,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR}, #{bgUrl,jdbcType=VARCHAR},
+		#{stopWords,jdbcType=VARCHAR}, #{accessAccount,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{bigScreenUrl,jdbcType=VARCHAR},
+		#{mobileScreenUrl,jdbcType=VARCHAR}), #{fontSize,jdbcType=VARCHAR}, 
+      	#{available,jdbcType=TINYINT})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.xjwlfw.yeshenghuo.model.Weishangqiang" useGeneratedKeys="true" keyProperty="id">
+		insert into weishangqiang
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="pause != null">
+				pause,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="qrcode != null">
+				qrcode,
+			</if>
+			<if test="location != null">
+				location,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="bgUrl != null">
+				bg_url,
+			</if>
+			<if test="stopWords != null">
+				stop_words,
+			</if>
+			<if test="accessAccount != null">
+				access_account,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="bigScreenUrl != null">
+				big_screen_url,
+			</if>
+			<if test="mobileScreenUrl != null">
+				mobile_screen_url,
+			</if>
+			<if test="fontSize != null">
+				font_Size,
+			</if>
+			<if test="available != null">
+		        available,
+		    </if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="pause != null">
+				#{pause,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="qrcode != null">
+				#{qrcode,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="bgUrl != null">
+				#{bgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="stopWords != null">
+				#{stopWords,jdbcType=VARCHAR},
+			</if>
+			<if test="accessAccount != null">
+				#{accessAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="bigScreenUrl != null">
+				#{bigScreenUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="mobileScreenUrl != null">
+				#{mobileScreenUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="fontSize != null">
+				#{fontSize,jdbcType=VARCHAR},
+			</if>
+			<if test="available != null">
+	        	#{available,jdbcType=TINYINT},
+	      	</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.xjwlfw.yeshenghuo.model.Weishangqiang">
+		update weishangqiang
+		<set>
+			<if test="pause != null">
+				pause = #{pause,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="qrcode != null">
+				qrcode = #{qrcode,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="bgUrl != null">
+				bg_url = #{bgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="stopWords != null">
+				stop_words = #{stopWords,jdbcType=VARCHAR},
+			</if>
+			<if test="accessAccount != null">
+				access_account = #{accessAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="bigScreenUrl != null">
+				big_screen_url = #{bigScreenUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="mobileScreenUrl != null">
+				mobile_screen_url = #{mobileScreenUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="fontSize != null">
+				font_size = #{fontSize,jdbcType=VARCHAR},
+			</if>
+	      	<if test="available != null">
+	        	available = #{available,jdbcType=TINYINT},
+	      	</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.xjwlfw.yeshenghuo.model.Weishangqiang">
+		update
+		weishangqiang
+		set pause = #{pause,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		qrcode = #{qrcode,jdbcType=VARCHAR},
+		location = #{location,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		bg_url = #{bgUrl,jdbcType=VARCHAR},
+		stop_words = #{stopWords,jdbcType=VARCHAR},
+		access_account = #{accessAccount,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		big_screen_url = #{bigScreenUrl,jdbcType=VARCHAR},
+		mobile_screen_url = #{mobileScreenUrl,jdbcType=VARCHAR},
+      	font_size = #{fontSize,jdbcType=VARCHAR},
+      	available = #{available,jdbcType=TINYINT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

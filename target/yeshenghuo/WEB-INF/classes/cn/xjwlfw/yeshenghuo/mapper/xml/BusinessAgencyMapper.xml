@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.BusinessAgencyMapper">
+  <resultMap id="BaseResultMap" type="cn.xjwlfw.yeshenghuo.model.BusinessAgency">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="business_id" jdbcType="INTEGER" property="businessId" />
+    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, business_id, agency_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from business_agency
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByBusinessId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from business_agency
+    where business_id = #{businessId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByAgencyId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from business_agency
+    where agency_id = #{agencyId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from business_agency
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.xjwlfw.yeshenghuo.model.BusinessAgency">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into business_agency (business_id, agency_id)
+    values (#{businessId,jdbcType=INTEGER}, #{agencyId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xjwlfw.yeshenghuo.model.BusinessAgency">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into business_agency
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="agencyId != null">
+        agency_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="businessId != null">
+        #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="agencyId != null">
+        #{agencyId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xjwlfw.yeshenghuo.model.BusinessAgency">
+    update business_agency
+    <set>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="agencyId != null">
+        agency_id = #{agencyId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xjwlfw.yeshenghuo.model.BusinessAgency">
+    update business_agency
+    set business_id = #{businessId,jdbcType=INTEGER},
+      agency_id = #{agencyId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

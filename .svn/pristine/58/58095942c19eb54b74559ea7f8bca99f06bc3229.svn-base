@@ -1,0 +1,877 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>微上墙后台管理</title>
+    <link href="<%=request.getContextPath()%>/resource/css/bootstrap.css" rel="stylesheet">
+    
+    <style>
+      .table tr th { text-align:center; background-color:#eee; }
+      .table tr td { text-align:center; }
+    </style>
+	<script src="<%=request.getContextPath()%>/resource/js/jquery.js"></script>
+	<script src="<%=request.getContextPath()%>/resource/js/bootstrap.js"></script>
+	<script>
+	  var root = "<%=request.getContextPath()%>"
+	  var basePath = "<%=request.getScheme()%>"+"://"+"<%=request.getServerName()%>"+":"+<%=request.getServerPort()%>+root;
+	  $(document).ready(function () {
+		  getHomeData();
+	  });
+	  function openWShQ() {
+		$('#openWShQBtn').attr('onclick', '');
+		$.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/openWShQ",
+			type : "get",
+			cache : false,
+			dataType : "json",
+			error : function() {
+				alert("正在申请中，请稍后...");
+				$('#openWShQBtn').attr('onclick', 'openWShQ()');
+			},
+			success : function(result) {
+				if (result.code === 500) {
+					alert(result.message);
+				}
+				$('#openWShQBtn').html("功能已开通");
+				$('#openWShQBtn').removeClass("btn-success");
+				$('#openWShQBtn').addClass("btn-fail");
+				$('#openWShQBtn').attr('onclick', '');
+				$('#functionSet').css('display', 'block');
+				$('#pushedContent').css('display', 'block');
+				$('#OwnScreenSet').css('display', 'block');
+				$('#DashangSet').css('display', 'block');
+				getHomeData();
+			}
+		});
+	  }
+	  function getHomeData() {
+		  $.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/homeData",
+			type : "get",
+			cache : false,
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				if (result.code != 0) {
+					alert("网络出错！");
+				} else {
+					if (result.data.opened == '1') {
+						$('#openWShQBtn').html("功能已开通");
+						$('#openWShQBtn').removeClass("btn-success");
+						$('#openWShQBtn').addClass("btn-fail");
+						$('#openWShQBtn').attr('onclick', '');
+						var info = result.data.info;
+						if (info.pause === "1") {
+							$('#settingMsg').html("已开通");
+							$('#settingMsg').css("color", "green");
+							$('#settingSwitch').html("暂停");
+						} else {
+							$('#settingMsg').html("已暂停");
+							$('#settingMsg').css("color", "red");
+							$('#settingSwitch').html("开启");
+						}
+						$('#settingName').html(info.name);
+						$("input[name='name']").val(info.name);
+						$('#settingAddress').html(info.location);
+						$("input[name='location']").val(info.location);
+						$('#settingTitle').html(info.title);
+						$("input[name='title']").val(info.title);
+						$('#settingFontSize').html(info.fontSize);
+						$("input[name='size'][value=" + info.fontSize + "]").attr("checked",true); 
+						$('#accessAccountMsg').html(info.accessAccount);
+						var date = new Date(info.createTime);
+						$('#createDate').html(date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+						$('#stopWords').val(info.stopWords);
+						$('#screenUrl').html(basePath + info.bigScreenUrl);
+						$('#big_screen').attr("href", basePath + info.bigScreenUrl);
+						$('#bgPic').attr('src', root + info.bgUrl);
+						$('#mobilePic').attr('src', root + info.qrcode);
+						$('#mobileURL').text(info.mobileURL);
+					} else {
+						$('#functionSet').css('display', 'none');
+						$('#pushedContent').css('display', 'none');
+						$('#OwnScreenSet').css('display', 'none');
+						$('#DashangSet').css('display', 'none');
+					}
+				}
+			}
+		});
+	  }
+	  function getContentList() {
+		  $.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/contentList",
+			type : "get",
+			cache : false,
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				var str = '';
+				for(var i = 0; i < result.length; i++) {
+					str += '<tr><td>' + result[i].content + '</td><td><img src="' + result[i].head + '" width="35" height="35"></td><td>' + result[i].nickName + '</td><td>' + result[i].sex + '</td><td>' + result[i].createDate + '</td><td><input type="checkbox" name="contentList" value="' + result[i].id + '"></td></tr>';
+				}
+				$('#contentList').html(str);
+			}
+		});
+	  }
+	  function ownScreenRefresh() {
+		  $.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/ownScreenList",
+			type : "get",
+			cache : false,
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				if (result.code == 0) {
+					var data = result.data;
+					
+					var str = '';
+					$.each(data.ownScreenList, function (index, ownScreen) {
+						str += '<tr><td>' + ownScreen.name + '</td><td>' + ownScreen.duration + '</td><td>' + ownScreen.price + '</td><td><a style="width:16px; height:16px; display:inline-block; background:url(' + root + '/resource/img/icon_admin_all.png) -59px -88px;" href="javascript:openOwnScreenSetModal(\'' + ownScreen.id + '\', \'' + ownScreen.name + '\', \'' + ownScreen.duration + '\', \'' + ownScreen.price + '\');"></a></td></tr>';
+					});
+					$('#OwnScreenBox').html(str);
+				} else {
+					alert(result.message)
+				}
+			}
+		});
+	  }
+	  function dashangRefresh() {
+		  $.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/dashangList",
+			type : "get",
+			cache : false,
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				if (result.code == 0) {
+					var data = result.data;
+					
+					var str = '';
+					$.each(data.dashangList, function (index, dashang) {
+						str += '<tr><td>' + dashang.name + '</td><td><img width="20" height="auto" src="' + root + dashang.img + '"></td><td>' + dashang.duration + '</td><td>' + dashang.price + '</td><td><a style="width:16px; height:16px; display:inline-block; background:url(' + root + '/resource/img/icon_admin_all.png) -59px -88px;" href="javascript:openDashangSetModal(\'' + dashang.id + '\', \'' + dashang.name + '\', \'' + dashang.img + '\', \'' + dashang.duration + '\', \'' + dashang.price + '\');"></a></td></tr>';
+					});
+					$('#DashangBox').html(str);
+				} else {
+					alert(result.message)
+				}
+			}
+		});
+	  }
+	  function settingSwitch() {
+		  var settingMsg = $('#settingMsg').text(); 
+		  var status = "";
+		  if (settingMsg === "已暂停") {
+			  status = "1";
+		  } else {
+			  status = "0";
+		  }
+		  $.ajax({
+				url : root + "/business/functionManage/weishangqiangManage/settingSwitch",
+				type : "get",
+				cache : false,
+				data : {
+					status : status
+				},
+				dataType : "json",
+				error : function() {
+					alert("网络出错！");
+				},
+				success : function(result) {
+					if (settingMsg === "已暂停") {
+						$('#settingMsg').html("已开通");
+						$('#settingMsg').css("color", "green");
+						$('#settingSwitch').html("暂停");
+					} else {
+						$('#settingMsg').html("已暂停");
+						$('#settingMsg').css("color", "red");
+						$('#settingSwitch').html("开启");
+					}
+				}
+			});
+	  }
+	  function settingName() {
+		  var name = $("input[name='name']").val();
+		  $.ajax({
+				url : root + "/business/functionManage/weishangqiangManage/settingName",
+				type : "get",
+				cache : false,
+				data : {
+					name : name
+				},
+				dataType : "json",
+				error : function() {
+					alert("网络出错！");
+				},
+				success : function(result) {
+					$('#settingName').html(name);
+				}
+			});
+		  $('#function-name-set').modal('hide');
+	  }
+	  function settingAddress() {
+		  var location = $("input[name='location']").val();
+		$.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/settingAddress",
+			type : "get",
+			cache : false,
+			data : {
+				address : location
+			},
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				$('#settingAddress').html(location);
+			}
+		});
+		$('#function-location-set').modal('hide');
+	  }
+	  function settingTitle() {
+		  var title = $("input[name='title']").val();
+		$.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/settingTitle",
+			type : "get",
+			cache : false,
+			data : {
+				title : title
+			},
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				$('#settingTitle').html(title);
+			}
+		});
+		$('#function-title-set').modal('hide');
+	  }
+	  function settingFontSize() {
+		  var size = $('input:radio[name="size"]:checked').val();
+		$.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/settingFontSize",
+			type : "get",
+			cache : false,
+			data : {
+				size : size
+			},
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				$('#settingFontSize').html(size);
+			}
+		});
+		$('#function-size-set').modal('hide');
+	  }
+	  function settingStopWords() {
+		  var stopWords = $('#stopWords').val();
+		$.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/settingStopWords",
+			type : "get",
+			cache : false,
+			data : {
+				stopWords : stopWords
+			},
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				
+			}
+		});
+		$('#function-stop-set').modal('hide');
+	  }
+	  function upload() {
+		  var screenFile = $('#screenFile').prop('files')[0];
+		  var filepath = $('#screenFile').val();
+		  var extStart=filepath.lastIndexOf(".");
+		  var ext=filepath.substring(extStart,filepath.length).toUpperCase();
+		  if(ext!=".BMP"&&ext!=".PNG"&&ext!=".GIF"&&ext!=".JPG"&&ext!=".JPEG"){
+		  	alert("图片限于bmp,png,gif,jpeg,jpg格式");
+		  	return false;
+		  }
+		  
+		  var _URL = window.URL || window.webkitURL;
+		  var img = new Image();
+		  img.onload = function () {
+			img.width = this.width;
+			img.height = this.height;
+		  };
+		  img.src = _URL.createObjectURL(screenFile);
+		  var value = img.width / img.height;
+		  if (value < 0.5 || value > 2) {
+			  alert("请上传长宽比例在0.5和2.0之间的图片");
+			  return false;
+		  }
+		  var data = new FormData('file', screenFile);
+		  data.append('file', screenFile);
+		  $.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/settingScreenFile",
+			type : "post",
+			contentType: false,
+	        mimeType: 'multipart/form-data',
+	        processData: false,
+			cache : false,
+			data : data,
+			dataType : "json",
+			error : function(result) {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				$('#bgPic').attr('src', result.data.bgUrl);
+			}
+		  });
+		  $('#function-screen-set').modal('hide');
+	  }
+	  function deleteSelect() {
+		  var list = [];
+		  $("input[name='contentList']:checked").each(
+			function() {
+				list.push($(this).val());
+	  		}
+		  );
+		  if (list.length !== 0) {
+			  this.doDel(list);
+		  }
+	  }
+	  function disSelectAll() {
+		  $("input[name='contentList']").each(function(){
+		     if($(this).is(":checked")){
+			    $(this).prop("checked", false);   
+			 }
+		  });
+	  }
+	  function deleteAll() {
+		  var list = [];
+		  $("input[name='contentList']").each(
+			function() {
+				list.push($(this).val());
+	  		}
+		  );
+		  if (list.length !== 0) {
+			  this.doDel(list);
+		  }
+	  }
+	  function doDel(list) {
+		  $.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/deleteContent",
+			type : "get",
+			cache : false,
+			data : {
+				list:JSON.stringify(list)
+			},
+			dataType : "json",
+			error : function() {
+				alert("网络出错！");
+			},
+			success : function(result) {
+				alert("删除成功！");
+				getContentList();
+			}
+		});
+	  }
+	  function openOwnScreenSetModal(id, name, duration, price) {
+		  $("#ownScreenId").val(id);
+		  $("#ownScreenName").val(name);
+		  $("#ownScreenDuration").val(duration);
+		  $("#ownScreenPrice").val(price);
+		  
+		  $("#own-screen-set-modal").modal("show");
+		  $(".modal-backdrop").remove();
+	  }
+	  function openDashangSetModal(id, name, img, duration, price) {
+		  $("#dashangId").val(id);
+		  $("#dashangName").val(name);
+		  $("#dashangImg").attr("src", root + img);
+		  $("#dashangDuration").val(duration);
+		  $("#dashangPrice").val(price);
+		  
+		  $("#dashang-set-modal").modal("show");
+		  $(".modal-backdrop").remove();
+	  }
+	  function ownScreenSetConfirm() {
+		  if ($("#ownScreenId").val().length < 1) {
+			  return alert("霸屏ID不能为空！");
+		  }
+		  if ($("#ownScreenName").val().length < 1) {
+			  return alert("霸屏名称不能为空！");
+		  }
+		  if ($("#ownScreenDuration").val().length < 1) {
+			  return alert("持续时间不能为空！");
+		  }
+		  if ($("#ownScreenPrice").val().length < 1) {
+			  return alert("霸屏价格不能为空！");
+		  }
+		  
+		  $("#own-screen-set-modal").modal("hide");
+		  
+		  $.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/ownScreenSet",
+			type : "post",
+			cache : false,
+			data : {
+				id : $("#ownScreenId").val(),
+				name : $("#ownScreenName").val(),
+				duration : $("#ownScreenDuration").val(),
+				price : $("#ownScreenPrice").val()
+			},
+			dataType : "json",
+			error : function() {
+				alert("修改失败！");
+			},
+			success : function(result) {
+				if (result.code == 0) {
+					alert(result.message);
+					ownScreenRefresh();
+				} else {
+					alert(result.message)
+				}
+			}
+		});
+	  }
+	  function dashangSetConfirm() {
+		  if ($("#dashangId").val().length < 1) {
+			  return alert("打赏ID不能为空！");
+		  }
+		  if ($("#dashangName").val().length < 1) {
+			  return alert("打赏名称不能为空！");
+		  }
+		  if ($("#dashangDuration").val().length < 1) {
+			  return alert("持续时间不能为空！");
+		  }
+		  if ($("#dashangPrice").val().length < 1) {
+			  return alert("打赏价格不能为空！");
+		  }
+		  
+		  $("#dashang-set-modal").modal("hide");
+		  
+		  $.ajax({
+			url : root + "/business/functionManage/weishangqiangManage/dashangSet",
+			type : "post",
+			cache : false,
+			data : {
+				id : $("#dashangId").val(), 
+				name : $("#dashangName").val(),
+				duration : $("#dashangDuration").val(), 
+				price : $("#dashangPrice").val()
+			},
+			dataType : "json",
+			error : function() {
+				alert("修改失败！");
+			},
+			success : function(result) {
+				if (result.code == 0) {
+					alert(result.message);
+					dashangRefresh();
+				} else {
+					alert(result.message)
+				}
+			}
+		});
+	  }
+	</script>
+  </head>
+    
+  <body style="padding:15px; overflow:auto;">
+    <h4>功能&nbsp;>&nbsp;微上墙</h4>
+    <hr>
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a data-toggle="tab" href="#open-instruction">开通说明</a>
+      </li>
+      <li id="functionSet">
+        <a data-toggle="tab" href="#function-set">功能设置</a>
+      </li>
+      <li id="pushedContent">
+        <a data-toggle="tab" href="#pushed-content" onclick="getContentList()">上墙内容</a>
+      </li>
+      <li id="OwnScreenSet">
+        <a data-toggle="tab" href="#own-screen-set" onclick="ownScreenRefresh()">霸屏设置</a>
+      </li>
+      <li id="DashangSet">
+        <a data-toggle="tab" href="#dashang-set" onclick="dashangRefresh()">打赏设置</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="open-instruction" style="padding:30px 15px;">
+        <style>
+		  .p1, .p2 { list-style-type:none; color:#666; margin-top:30px; }
+		  .p1 h4, .p2 h4 { margin-top:18px; margin-bottom:18px; }
+		  .p1 li, .p2 li { font-size:12px; margin-top:10px; }
+		</style>
+        <ul class="p1">
+          <h4>开通说明</h4>
+          <li>现场互动杀手锏，用户通过微信公众号中的微上墙链接发布图片文字，该图片文字会在酒吧现场大屏幕显示，微上墙可以实现现场顾客良好互动。</li>
+          <li>使用微上墙流程：</li>
+          <li>1，登录夜程序后台开通微上墙；</li>
+          <li>2，在功能设置中，打开大屏幕；</li>
+          <li>3，用户进入微上墙功能页面，发布图片文字等内容；</li>
+          <li>4，用户发布的图片文字内容，将在大屏幕上显示；</li>
+          <li style="color:#ff4b69; font-weight:bold;">注：夜程序微上墙中的互动收入夜程序将收取一定比例的分成。</li>
+        </ul>
+        <ul class="p2">
+          <h4>开通条件</h4>
+          <li>1，必须为vip账号</li>
+          <li>2，现场应该配备有大屏幕，建议分辨率为800*600以上</li>
+        </ul>
+        <ul class="p2">
+          <button id="openWShQBtn" class="btn btn-success" style="padding-left:20px; padding-right:20px;" onclick="openWShQ()">开通</button>
+        </ul>
+      </div>
+      <div class="tab-pane fade" id="function-set" style="padding:15px;">
+        <style>
+		  .list-group { border:0px; }
+		  .list-group-item { border-left:0px; border-right:0px; padding:20px 0px; }
+		  .list-group-item:first-child { border-top:0px; }
+		  .list-group-item:last-child { border-bottom:0px; }
+		</style>
+        <ul class="list-group" style="margin-top:15px;">
+          <li class="list-group-item">
+            <span class="list-group-item-heading">大屏幕</span>
+            <a id="big_screen" class="pull-right" target="view_window" href="#">打开大屏幕</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">功能暂停 <span id="settingMsg">已暂停</span></span>
+            <!-- <a class="pull-right" href="javascript:$('#function-switch-set').modal('show');$('.modal-backdrop').remove();" id="settingSwitch">开启</a> -->
+            <a class="pull-right" href="#" onclick="settingSwitch()" id="settingSwitch">开启</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">设置名称  <span id="settingName"></span></span>
+            <a class="pull-right" href="javascript:$('#function-name-set').modal('show');$('.modal-backdrop').remove();">编辑</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">酒吧位置 <span id="settingAddress"></span></span>
+            <a class="pull-right" href="javascript:$('#function-location-set').modal('show');$('.modal-backdrop').remove();">编辑</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">微上墙标题 <span id="settingTitle"></span></span>
+            <a class="pull-right" href="javascript:$('#function-title-set').modal('show');$('.modal-backdrop').remove();">设置</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">设置大屏幕背景 请上传宽度大于1000px，高度大于600px的图片</span>
+            <a class="pull-right" href="javascript:$('#function-screen-set').modal('show');$('.modal-backdrop').remove();">上传</a>
+            <div>
+            	<img alt="" src="" id="bgPic" style="height: 350px">
+            </div>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">微上墙文字大小  <span id="settingFontSize"></span></span>
+            <a class="pull-right" href="javascript:$('#function-size-set').modal('show');$('.modal-backdrop').remove();">设置</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">敏感词屏蔽</span>
+            <a class="pull-right" href="javascript:$('#function-stop-set').modal('show');$('.modal-backdrop').remove();">设置</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">手机端页面URL  <br><span id="mobileURL" style="width:100%; word-wrap:break-word;"></span></span>
+            <div>
+            	<img alt="" src="" id="mobilePic" style="height: 350px">
+            </div>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">大屏幕URL  <span id="screenUrl"></span></span>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">手机页面访问次数 <span id="accessAccountMsg"></span></span>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">开通时间 <span id="createDate"></span></span>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-pane fade" id="pushed-content"  style="padding:25px 15px;">
+        <table class="table table-bordered">
+          <thead>
+            <th>内容</th>
+            <th>头像</th>
+            <th>昵称</th>
+            <th>性别</th>
+            <th>时间</th>
+            <th>操作</th>
+          </thead>
+          <tbody id="contentList">
+          </tbody>
+          <tr>
+            <th colspan="6" style="text-align:right;">
+              <button class="btn btn-info btn-sm" onclick="disSelectAll()">取消选择</button>
+              <!-- <button class="btn btn-warning btn-sm" onclick="">加入黑名单</button> -->
+              <button class="btn btn-danger btn-sm" onclick="deleteSelect()">删除</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteAll()">删除全部消息</button>
+            </th>
+          </tr>
+        </table>
+      </div>
+      
+      <div class="tab-pane fade" id="own-screen-set" style="padding:30px 15px;">
+        <table class="table table-bordered">
+          <thead>
+            <th>霸屏名称</th>
+            <th>持续时间</th>
+            <th>价格（￥）</th>
+            <th>操作</th>
+          </thead>
+          <tbody id="OwnScreenBox">
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="tab-pane fade" id="dashang-set" style="padding:30px 15px;">
+        <table class="table table-bordered">
+          <thead>
+            <th>打赏名称</th>
+            <th>打赏图片</th>
+            <th>持续时间</th>
+            <th>价格（￥）</th>
+            <th>操作</th>
+          </thead>
+          </thead>
+          <tbody id="DashangBox">
+          </tbody>
+        </table>
+      </div>
+      
+    </div>
+    
+    <!-- 模态框（Modal） -->
+    <div class="modal" id="function-name-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">设置名称</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <label for="name">名称 (不超过8个字符)：</label>
+                <input name="name" class="form-control" type="text">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="settingName()">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    <div class="modal" id="function-location-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">设置酒吧位置</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <label for="location">设置酒吧位置：</label>
+                <input name="location" class="form-control" type="text">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="settingAddress()">确定</button>
+         </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    <div class="modal" id="function-title-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">设置标题</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <label for="title">设置标题：</label>
+                <input name="title" class="form-control" type="text">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="settingTitle()">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    <div class="modal" id="function-size-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">设置微上墙文字大小</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <label for="size">设置微上墙文字大小：</label>
+                <input name="size" class="form-control" type="radio" value="1" checked="checked">小号
+                <input name="size" class="form-control" type="radio" value="2">中号
+                <input name="size" class="form-control" type="radio" value="3">大号
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="settingFontSize()">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    <div class="modal" id="function-stop-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">设置敏感词</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <label for="stopWords">设置敏感词,词与词之间以,分割：</label>
+                <textarea id="stopWords" class="form-control"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="settingStopWords()">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    <div class="modal" id="function-screen-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">设置敏感词</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form" enctype="multipart/form-data" method="post" id="screenForm">
+              <div class="form-group">
+                <label for="screenFile">设置敏感词,词与词之间以,分割：</label>
+                <input id="screenFile" type="file" name="file" class="form-control">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="upload()">确定</button>
+            <!-- <button type="button" class="btn btn-success btn-sm" onclick="javascript:$('#screenFile').uploadify('upload')">确定</button> -->
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    <!-- 设置确认窗口 -->
+    <div class="modal" id="function-switch-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+             <div class="form-group">
+               <span style="font-align: center">确定开启功能？</span>
+             </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-success btn-sm">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    <!-- 霸屏商品修改窗口 -->
+    <div class="modal" id="own-screen-set-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">霸屏修改</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form" action="#" method="post">
+						<input id="ownScreenId" type="hidden" class="form-control">
+						<div class="form-group">
+							<label for="ownScreenName">霸屏名称</label>
+							<input id="ownScreenName" type="text" class="form-control" placeholder="请输霸屏名称">
+						</div>
+						<div class="form-group">
+							<label for="ownScreenDuration">霸屏时间</label>
+							<input id="ownScreenDuration" type="text" class="form-control" placeholder="请输霸屏时间">
+						</div>
+						<div class="form-group">
+							<label for="ownScreenPrice">霸屏价格</label>
+							<input id="ownScreenPrice" type="text" class="form-control" placeholder="请输霸屏价格">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-success btn-sm" onclick="ownScreenSetConfirm()">确定</button>
+				</div>
+			</div>
+		</div>
+    </div>
+    
+	<!-- 打赏商品修改窗口 -->
+	<div class="modal" id="dashang-set-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">打赏修改</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form" action="#" method="post">
+						<input id="dashangId" type="hidden" class="form-control">
+						<div class="form-group">
+							<label for="dashangName">打赏名称</label>
+							<input id="dashangName" type="text" class="form-control" placeholder="请打赏屏名称" disabled>
+						</div>
+						<div class="form-group">
+							<label for="dashangImg">打赏图片</label>
+							<br>
+							<img id="dashangImg" width="35" height="auto" src="#">
+						</div>
+						<div class="form-group">
+							<label for="dashangDuration">打赏时间</label>
+							<input id="dashangDuration" type="text" class="form-control" placeholder="请输打赏时间" disabled>
+						</div>
+						<div class="form-group">
+							<label for="dashangPrice">打赏价格</label>
+							<input id="dashangPrice" type="text" class="form-control" placeholder="请输打赏价格">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-success btn-sm" onclick="dashangSetConfirm()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    
+  </body>
+</html>

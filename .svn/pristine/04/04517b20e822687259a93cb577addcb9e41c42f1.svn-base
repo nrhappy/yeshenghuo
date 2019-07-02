@@ -1,0 +1,13 @@
+package cn.xjwlfw.yeshenghuo.service.corporation.agencyManage;
+
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+
+public interface AgencyInfoService {
+	
+	public String index(Model model, String agencyName);
+
+	public Result updateNotes(int agencyId, String notes, Model model);
+
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.AddressMapper">
+  <resultMap id="BaseResultMap" type="cn.xjwlfw.yeshenghuo.model.Address">
+    <id column="code" jdbcType="INTEGER" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    code, name
+  </sql>
+  <select id="selectByCode" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from address
+    where code = #{code,jdbcType=INTEGER}
+  </select>
+  <select id="selectProvinceList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from address
+    where code LIKE '%0000';
+  </select>
+  <select id="selectCityListByProvinceCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from address
+    where code LIKE CONCAT(#{provinceCode}, '%00') and code NOT LIKE CONCAT(#{provinceCode}, '0000')
+  </select>
+  <select id="selectDistrictListByCityCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from address
+    where code LIKE CONCAT(#{cityCode}, '%') and code NOT LIKE CONCAT(#{cityCode}, '00')
+  </select>
+</mapper>

@@ -1,0 +1,21 @@
+package cn.xjwlfw.yeshenghuo.mapper;
+
+import java.util.List;
+
+import cn.xjwlfw.yeshenghuo.model.OwnScreen;
+
+public interface OwnScreenMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(OwnScreen record);
+
+    int insertSelective(OwnScreen record);
+
+    OwnScreen selectByPrimaryKey(Integer id);
+    
+    List<OwnScreen> selectList();
+
+    int updateByPrimaryKeySelective(OwnScreen record);
+
+    int updateByPrimaryKey(OwnScreen record);
+}

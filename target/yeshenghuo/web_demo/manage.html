@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Bootstrap 101 Template</title>
+    <link href="resource/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="css/manage.css" rel="stylesheet">
+  </head>
+    
+  <body>
+    <div class="nav navbar-inverse" role="navigation">
+      <div class="container">
+      
+        <div class="navbar-header">
+          <button class="navbar-toggle" data-toggle="collapse" data-target="#bs-example">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        
+        <div class="collapse navbar-collapse" id="bs-example">          
+          <ul style="padding:2px;" class="nav navbar-nav navbar-right">
+            <li><a style="padding:0px;" href="#"><img src="resource/img/bardefatulLogo.png" width="50" height="50"></a></li>
+            <li><a href="#">XX网络</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-log-out"></span></a></li>
+          </ul>          
+        </div>
+        
+      </div>
+    </div>
+    
+    <div style="position:relative; min-height:100%; left:0px; bottom:0px;" class="container">
+      <div class="left-side-bar" style="z-index:9; position:absolute; top:-55px; left:0px; height:700px; background-color:#eee; width:178px;">
+        <span style="background:url(resource/img/icon_admin_all.png) 0 0; width:86px; height:36px; display:inline-block; margin:20px 40px;"></span>
+        <style>
+		  .overview a .licon {
+		    background:url(resource/img/icon_admin_all.png) 0px -35px;
+		  }
+		  .overview:hover a .licon {
+		    background:url(resource/img/icon_admin_all.png) -22px -35px;
+		  }
+		  .function a .licon {
+		    background:url(resource/img/icon_admin_all.png) 0px -57px;
+		  }
+		  .function:hover a .licon {
+		    background:url(resource/img/icon_admin_all.png) -22px -57px;
+		  }
+		  .weixin a .licon {
+		    background:url(resource/img/icon_admin_all.png) 0px -79px;
+		  }
+		  .weixin:hover a .licon {
+		    background:url(resource/img/icon_admin_all.png) -22px -79px;
+		  }
+		  .account a .licon {
+		    background:url(resource/img/icon_admin_all.png) 0px -101px;
+		  }
+		  .account:hover a .licon {
+		    background:url(resource/img/icon_admin_all.png) -22px -101px;
+		  }
+		  .left-side-bar ul li a:hover {
+		    color:#ff4b69;
+		  }
+		</style>
+        <ul class="overview"><a class="item-head" target="main-frame" href="overall.html"><span class="licon"></span>总览</a>
+        </ul>
+        <ul class="function"><a class="item-head" href="javascript:;"><span class="licon"></span>功能</a>
+          <li><a target="main-frame" href="weishangqiangManage.html">微上墙</a></li>
+          <li><a href="javascript:;">赛马游戏</a></li>
+          <li><a href="javascript:;">现场交友</a></li>
+        </ul>
+        <ul class="weixin"><a class="item-head" href="javascript:;"><span class="licon"></span>微信公众号</a>
+          <li><a href="javascript:;">用户</a></li>
+          <li><a href="javascript:;">绑订公众号</a></li>
+        </ul>
+        <ul class="account"><a class="item-head" href="javascript:;"><span class="licon"></span>账号管理</a>
+          <li><a href="javascript:;">账号资料</a></li>
+          <li><a href="javascript:;">黑名单</a></li>
+          <li><a href="javascript:parentFunction();">密码管理</a></li>
+        </ul>
+      </div>
+      <div style="z-index:9; position:absolute; top:0px; left:178px; right:0px; height:645px;">
+        <iframe name="main-frame" src="overall.html" style="width:100%; height:100%; border-width:0px;">
+        </iframe>
+      </div>
+    </div>
+    <div class="text-center" style="position:absolute; top:700px; min-width:100%; padding-top:15px;">
+      <p style="font-size:12px;">反馈邮箱：yancy@wemew.cn 公司电话：400-088-9828 举报投诉：400-088-9828 转 6</p>
+      <p style="font-size:12px;">中国·四川·成都·天府大道中段·萃华路89号·节能大厦A座24楼 成都腾木科技有限公司 代理加盟</p>
+      <p style="font-size:12px;">©wemew 2013-2017 京ICP备13034301号-2</p>
+    </div>
+    
+	<script src="resource/jquery/js/jquery.js"></script>
+	<script src="resource/bootstrap/js/bootstrap.js"></script>
+  </body>
+</html>

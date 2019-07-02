@@ -1,0 +1,33 @@
+package cn.xjwlfw.yeshenghuo.model;
+
+public class UserBusiness {
+    private Integer id;
+
+    private Integer userId;
+
+    private Integer businessId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Integer businessId) {
+        this.businessId = businessId;
+    }
+}

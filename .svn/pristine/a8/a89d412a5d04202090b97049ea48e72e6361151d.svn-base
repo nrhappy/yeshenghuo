@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.BusinessWeishangqiangMapper">
+	<resultMap
+		id="BaseResultMap"
+		type="cn.xjwlfw.yeshenghuo.model.BusinessWeishangqiang">
+		<id
+			column="id"
+			jdbcType="INTEGER"
+			property="id" />
+		<result
+			column="business_id"
+			jdbcType="INTEGER"
+			property="businessId" />
+		<result
+			column="weishangqiang_id"
+			jdbcType="INTEGER"
+			property="weishangqiangId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, business_id, weishangqiang_id
+	</sql>
+	<select
+		id="selectByPrimaryKey"
+		parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from business_weishangqiang
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select
+		id="selectByBusinessId"
+		parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from business_weishangqiang
+		where business_Id = #{businessId,jdbcType=INTEGER}
+	</select>
+	<delete
+		id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from business_weishangqiang
+		where id =
+		#{id,jdbcType=INTEGER}
+	</delete>
+	<insert
+		id="insert"
+		parameterType="cn.xjwlfw.yeshenghuo.model.BusinessWeishangqiang">
+		insert into business_weishangqiang (id, business_id,
+		weishangqiang_id
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{businessId,jdbcType=INTEGER},
+		#{weishangqiangId,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert
+		id="insertSelective"
+		parameterType="cn.xjwlfw.yeshenghuo.model.BusinessWeishangqiang">
+		insert into business_weishangqiang
+		<trim
+			prefix="("
+			suffix=")"
+			suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="businessId != null">
+				business_id,
+			</if>
+			<if test="weishangqiangId != null">
+				weishangqiang_id,
+			</if>
+		</trim>
+		<trim
+			prefix="values ("
+			suffix=")"
+			suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="businessId != null">
+				#{businessId,jdbcType=INTEGER},
+			</if>
+			<if test="weishangqiangId != null">
+				#{weishangqiangId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update
+		id="updateByPrimaryKeySelective"
+		parameterType="cn.xjwlfw.yeshenghuo.model.BusinessWeishangqiang">
+		update business_weishangqiang
+		<set>
+			<if test="businessId != null">
+				business_id = #{businessId,jdbcType=INTEGER},
+			</if>
+			<if test="weishangqiangId != null">
+				weishangqiang_id = #{weishangqiangId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update
+		id="updateByPrimaryKey"
+		parameterType="cn.xjwlfw.yeshenghuo.model.BusinessWeishangqiang">
+		update business_weishangqiang
+		set business_id =
+		#{businessId,jdbcType=INTEGER},
+		weishangqiang_id =
+		#{weishangqiangId,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

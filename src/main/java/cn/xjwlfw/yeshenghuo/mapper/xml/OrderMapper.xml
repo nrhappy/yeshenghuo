@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="cn.xjwlfw.yeshenghuo.model.Order">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="wechat_user_id" jdbcType="INTEGER" property="wechatUserId" />
+    <result column="business_id" jdbcType="INTEGER" property="businessId" />
+    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <result column="goods_type" jdbcType="SMALLINT" property="goodsType" />
+    <result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+    <result column="goods_summary" jdbcType="VARCHAR" property="goodsSummary" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="business_income" jdbcType="DECIMAL" property="businessIncome" />
+    <result column="agency_income" jdbcType="DECIMAL" property="agencyIncome" />
+    <result column="corporation_income" jdbcType="DECIMAL" property="corporationIncome" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+  </resultMap>
+  <resultMap id="RevenueCountResultMap" type="cn.xjwlfw.yeshenghuo.model.RevenueCount">
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order.id, order.wechat_user_id, order.business_id, order.agency_id, order.goods_type, order.goods_id, order.goods_summary, 
+    order.amount, order.business_income, order.agency_income, order.corporation_income, order.status, order.create_time, 
+    order.update_time, order.notes
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from `order`
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectRevenueCountList" resultMap="RevenueCountResultMap">
+    select
+	  DATE(`order`.update_time) AS date,
+	  SUM(`order`.amount) AS amount
+    from `order`
+    where `order`.status = 1
+    and DATEDIFF(NOW(),update_time) &lt; #{nears,jdbcType=INTEGER}
+    group by date
+    order by date desc
+  </select>
+  <select id="selectBusinessRevenueCountList" resultMap="RevenueCountResultMap">
+    select
+	  DATE(`order`.update_time) AS date,
+	  SUM(`order`.business_income) AS amount
+    from `order`
+    where `order`.status = 1
+      and DATEDIFF(NOW(),update_time) &lt; #{nears,jdbcType=INTEGER}
+    <if test="businessId != null">
+      and business_id = #{businessId,jdbcType=INTEGER}
+    </if>
+    group by date
+    order by date desc
+  </select>
+  <select id="selectAgencyRevenueCountList" resultMap="RevenueCountResultMap">
+    select
+	  DATE(`order`.update_time) AS date,
+	  SUM(`order`.agency_income) AS amount
+    from `order`
+    where `order`.status = 1
+      and DATEDIFF(NOW(),update_time) &lt; #{nears,jdbcType=INTEGER}
+    <if test="agencyId != null">
+      and agency_id = #{agencyId,jdbcType=INTEGER}
+    </if>
+    group by date
+    order by date desc
+  </select>
+  <select id="selectList" parameterType="cn.xjwlfw.yeshenghuo.model.Order" resultMap="BaseResultMap">
+    select 
+    order.id, order.wechat_user_id, order.business_id, business.`name` AS businessName, wechat_user.nickname AS wechatName,
+    order.agency_id, order.goods_type, order.goods_id, order.goods_summary, 
+    order.amount, order.business_income, order.agency_income, order.corporation_income, order.status, order.create_time, 
+    order.update_time, order.notes
+    from `order`
+    left join business on `order`.business_id = business.id
+    left join wechat_user on `order`.wechat_user_id = wechat_user.id
+    where status = 1
+    order by update_time desc
+  </select>
+  <select id="selectListByBusiness" parameterType="cn.xjwlfw.yeshenghuo.model.Order" resultMap="BaseResultMap">
+    select 
+    order.id, order.wechat_user_id, order.business_id, business.`name` AS businessName, wechat_user.nickname AS wechatName,
+    order.agency_id, order.goods_type, order.goods_id, order.goods_summary, 
+    order.amount, order.business_income, order.agency_income, order.corporation_income, order.status, order.create_time, 
+    order.update_time, order.notes
+    from `order`
+    left join business on `order`.business_id = business.id
+    left join wechat_user on `order`.wechat_user_id = wechat_user.id
+    where `order`.business_id is not null and status = 1
+    <if test="businessId != null">
+      and `order`.business_id = #{businessId,jdbcType=INTEGER}
+    </if>
+    order by update_time desc
+  </select>
+  <select id="selectListByAgency" parameterType="cn.xjwlfw.yeshenghuo.model.Order" resultMap="BaseResultMap">
+    select 
+    order.id, order.wechat_user_id, business.`name` AS businessName, agency.`name` AS agencyName, wechat_user.nickname AS wechatName, order.agency_id, order.goods_type, order.goods_id, order.goods_summary, 
+    order.amount, order.business_income, order.agency_income, order.corporation_income, order.status, order.create_time, 
+    order.update_time, order.notes
+    from `order`
+    left join business on `order`.business_id = business.id
+    left join agency on `order`.agency_id = agency.id
+    left join wechat_user on `order`.wechat_user_id = wechat_user.id
+    where `order`.agency_id is not null and status = 1
+    <if test="agencyId != null">
+      and `order`.agency_id = #{agencyId,jdbcType=INTEGER}
+    </if>
+    order by update_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from order
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.xjwlfw.yeshenghuo.model.Order">
+    insert into `order` (id, wechat_user_id, business_id, 
+      agency_id, goods_type, goods_id, 
+      goods_summary, amount, business_income, 
+      agency_income, corporation_income, status, 
+      create_time, update_time, notes
+      )
+    values (#{id,jdbcType=VARCHAR}, #{wechatUserId,jdbcType=INTEGER}, #{businessId,jdbcType=INTEGER}, 
+      #{agencyId,jdbcType=INTEGER}, #{goodsType,jdbcType=SMALLINT}, #{goodsId,jdbcType=INTEGER}, 
+      #{goodsSummary,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{businessIncome,jdbcType=DECIMAL}, 
+      #{agencyIncome,jdbcType=DECIMAL}, #{corporationIncome,jdbcType=DECIMAL}, #{status,jdbcType=SMALLINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{notes,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xjwlfw.yeshenghuo.model.Order">
+    insert into `order`
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="wechatUserId != null">
+        wechat_user_id,
+      </if>
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="agencyId != null">
+        agency_id,
+      </if>
+      <if test="goodsType != null">
+        goods_type,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="goodsSummary != null">
+        goods_summary,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="businessIncome != null">
+        business_income,
+      </if>
+      <if test="agencyIncome != null">
+        agency_income,
+      </if>
+      <if test="corporationIncome != null">
+        corporation_income,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="notes != null">
+        notes,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatUserId != null">
+        #{wechatUserId,jdbcType=INTEGER},
+      </if>
+      <if test="businessId != null">
+        #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="agencyId != null">
+        #{agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsType != null">
+        #{goodsType,jdbcType=SMALLINT},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsSummary != null">
+        #{goodsSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="businessIncome != null">
+        #{businessIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="agencyIncome != null">
+        #{agencyIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="corporationIncome != null">
+        #{corporationIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="notes != null">
+        #{notes,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xjwlfw.yeshenghuo.model.Order">
+    update `order`
+    <set>
+      <if test="wechatUserId != null">
+        wechat_user_id = #{wechatUserId,jdbcType=INTEGER},
+      </if>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="agencyId != null">
+        agency_id = #{agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsType != null">
+        goods_type = #{goodsType,jdbcType=SMALLINT},
+      </if>
+      <if test="goodsId != null">
+        goods_id = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsSummary != null">
+        goods_summary = #{goodsSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="businessIncome != null">
+        business_income = #{businessIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="agencyIncome != null">
+        agency_income = #{agencyIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="corporationIncome != null">
+        corporation_income = #{corporationIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="notes != null">
+        notes = #{notes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xjwlfw.yeshenghuo.model.Order">
+    update `order`
+    set wechat_user_id = #{wechatUserId,jdbcType=INTEGER},
+      business_id = #{businessId,jdbcType=INTEGER},
+      agency_id = #{agencyId,jdbcType=INTEGER},
+      goods_type = #{goodsType,jdbcType=SMALLINT},
+      goods_id = #{goodsId,jdbcType=INTEGER},
+      goods_summary = #{goodsSummary,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      business_income = #{businessIncome,jdbcType=DECIMAL},
+      agency_income = #{agencyIncome,jdbcType=DECIMAL},
+      corporation_income = #{corporationIncome,jdbcType=DECIMAL},
+      status = #{status,jdbcType=SMALLINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      notes = #{notes,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

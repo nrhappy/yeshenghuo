@@ -1,0 +1,50 @@
+package cn.xjwlfw.yeshenghuo.service.business;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.ui.Model;
+
+/**
+ * 商家登录
+ */
+public interface BusinessLoginService {	
+	/**
+	 * 登录处理
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月15日
+	 */
+	public String doLogin(String mobile, String password, Model model);	
+	
+	/**
+	 * 注册处理
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月15日
+	 */
+	public String doRegister(String mobile, String password, String repassword, String imageCaptcha, Model model, HttpServletRequest request);
+	
+	/**
+	 * 完善处理
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月18日
+	 */
+	public String doComplete(String name, String tel, String bank, String bankAccount, String bankPossessor, String authcode, String RefMobile, String provinceCode, String cityCode, String districtCode, Model model);
+	
+	/**
+	 * 忘记密码处理
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月18日
+	 */
+	public String doForget(HttpServletRequest request);
+	
+	/**
+	 * 重置密码处理
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月18日
+	 */
+	public String doReset(HttpServletRequest request);
+}

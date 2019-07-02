@@ -1,0 +1,135 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+<link href="<%=request.getContextPath()%>/resource/css/bootstrap.css"
+	rel="stylesheet">
+<style>
+.table tr th {
+	text-align: center;
+	background-color: #eee;
+}
+
+.table tr td {
+	text-align: center;
+}
+</style>
+<script src="<%=request.getContextPath()%>/resource/js/jquery.js"></script>
+<script src="<%=request.getContextPath()%>/resource/js/bootstrap.js"></script>
+<script>
+	  var root = "<%=request.getContextPath()%>";
+
+	function openNotesSetModal(agencyId) {
+		$("#agencyId").val(agencyId);
+		$("#notes-set-modal").modal("show");
+		$(".modal-backdrop").remove();
+	}
+
+	function check() {
+		if ($("#agencyName").val().length < 1) {
+
+		}
+	}
+
+	function updateNotes(agencyId, notes) {
+		$.ajax({
+			url : root + "/corporation/agencyManage/agencyInfo/updateNotes",
+			type : "post",
+			data : {
+				agencyId : agencyId,
+				notes : notes
+			},
+			dataType : "json",
+			error : function() {
+				alert("error");
+			},
+			success : function(result) {
+				if (result.code == 0) {
+					location.reload();
+				} else {
+					alert(result.message);
+				}
+			}
+		});
+	}
+</script>
+</head>
+
+<body style="padding: 15px; overflow: auto;">
+	<h4>代理商管理&nbsp;>&nbsp;代理商信息</h4>
+	<hr>
+	<div class="container-fluid">
+
+		<div class="row">
+			<form role="form" action="<%=request.getContextPath()%>/corporation/agencyManage/agencyInfo" method="get" onsubmit="return check()">
+				<div class="form-group input-group">
+					<input id="agencyName" name="agencyName" class="form-control pull-right" style="width: 25%;" type="text" placeholder="请输入代理商名称"> 
+					<span class="input-group-btn"><button class="btn btn-success" type="submit" onclick="searchCheck()">搜索</button></span>
+				</div>
+			</form>
+		</div>
+
+		<div class="row">
+			<table class="table table-bordered">
+				<tr>
+					<th>代理商ID</th>
+					<th>代理商名称</th>
+					<th>代理商地址</th>
+					<th>代理商电话</th>
+					<th>银行类型</th>
+					<th>银行户主</th>
+					<th>银行卡号</th>
+					<th>余额</th>
+					<th>分成比例（%）</th>
+					<th>备注</th>
+					<th>操作</th>
+				</tr>
+				<c:forEach items="${agencyList}" var="agency" varStatus="status">
+					<tr>
+						<td>${agency.id}</td>
+						<td>${agency.name}</td>
+						<td>${agency.addrress}</td>
+						<td>${agency.tel}</td>
+						<td>${agency.bank}</td>
+						<td>${agency.bankPossessor}</td>
+						<td>${agency.bankAccount}</td>
+						<td>${agency.balance}</td>
+						<td>${agency.ratio}</td>
+						<td>${agency.notes}</td>
+						<td><a style="width:16px; height:16px; display:inline-block; margin:0px; background:url(<%=request.getContextPath()%>/resource/img/icon_admin_all.png) -59px -88px;" href="javascript:openNotesSetModal('${agency.id}');"></a></td>
+					</tr>
+				</c:forEach>
+			</table>
+		</div>
+
+	</div>
+
+	<div class="modal" id="notes-set-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">编辑备注</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form" action="#" method="post">
+						<input id="agencyId" name="agencyId" type="hidden">
+						<div class="form-group">
+							<label for="">备注</label> <input id="notes" name="notes" type="text" class="form-control">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-success btn-sm" onclick="updateNotes($('#agencyId').val(), $('#notes').val())">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

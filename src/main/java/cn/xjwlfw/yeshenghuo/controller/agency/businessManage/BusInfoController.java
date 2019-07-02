@@ -1,0 +1,63 @@
+package cn.xjwlfw.yeshenghuo.controller.agency.businessManage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.xjwlfw.yeshenghuo.service.agency.businessManage.BusInfoService;
+import cn.xjwlfw.yeshenghuo.system.base.BaseController;
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+
+/**
+ * 商家信息模块
+ */
+@Controller
+@RequestMapping(value = "/agency/businessManage/businessInfo")
+public class BusInfoController extends BaseController {
+	
+	@Autowired
+	private BusInfoService busInfoService;
+	
+	/**
+	 * 商家信息页面
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月07日
+	 */
+	@RequestMapping(value = "")
+	public String index(@RequestParam(value = "businessName", required = false) String businessName, Model model) {
+		return busInfoService.index(businessName, model);
+	}
+	
+	/**
+	 * 修改备注
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月11日
+	 */
+	@RequestMapping(value = "/updateNotes", method = RequestMethod.POST)
+	@ResponseBody
+	public Result updateNotes(
+			@RequestParam(value = "businessId") int businessId, 
+			@RequestParam(value = "notes") String notes, 
+			Model model) {
+		return busInfoService.updateNotes(businessId, notes, model);
+	}
+	
+	/**
+	 * 提现记录
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月11日
+	 */
+	@RequestMapping(value = "/cashOutList")
+	@ResponseBody
+	public Result cashOutList(@RequestParam(value = "businessId") int businessId, Model model) {
+		return busInfoService.cashOutList(businessId, model);
+	}
+
+}

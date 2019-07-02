@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.BusinessWechatUserMapper">
+	<resultMap
+		id="BaseResultMap"
+		type="cn.xjwlfw.yeshenghuo.model.BusinessWechatUser">
+		<id
+			column="id"
+			jdbcType="INTEGER"
+			property="id" />
+		<result
+			column="business_id"
+			jdbcType="INTEGER"
+			property="businessId" />
+		<result
+			column="wechat_user_id"
+			jdbcType="INTEGER"
+			property="wechatUserId" />
+		<result
+			column="role"
+			jdbcType="VARCHAR"
+			property="role" />
+    	<result 
+    		column="own_screen_count" 
+    		jdbcType="INTEGER" 
+    		property="ownScreenCount" />
+		<result
+			column="notes"
+			jdbcType="VARCHAR"
+			property="notes" />
+	</resultMap>
+	<sql id="Base_Column_List">
+    	id, business_id, wechat_user_id, role, own_screen_count, notes
+	</sql>
+	<select
+		id="selectByBusinessId"
+		parameterType="cn.xjwlfw.yeshenghuo.model.BusinessWechatUser"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from business_wechat_user
+		where business_id = #{businessId,jdbcType=INTEGER}
+			and wechat_user_id = #{wechatUserId,jdbcType=INTEGER}
+	</select>
+	<delete
+		id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from business_wechat_user
+		where id =
+		#{id,jdbcType=INTEGER}
+	</delete>
+	<insert
+		id="insertSelective"
+		parameterType="cn.xjwlfw.yeshenghuo.model.BusinessWechatUser">
+		insert into business_wechat_user
+		<trim
+			prefix="("
+			suffix=")"
+			suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="businessId != null">
+				business_id,
+			</if>
+			<if test="wechatUserId != null">
+				wechat_user_id,
+			</if>
+			<if test="role != null">
+				role,
+			</if>
+      		<if test="ownScreenCount != null">
+        		own_screen_count,
+      		</if>
+			<if test="notes != null">
+				notes,
+			</if>
+		</trim>
+		<trim
+			prefix="values ("
+			suffix=")"
+			suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="businessId != null">
+				#{businessId,jdbcType=INTEGER},
+			</if>
+			<if test="wechatUserId != null">
+				#{wechatUserId,jdbcType=INTEGER},
+			</if>
+			<if test="role != null">
+				#{role,jdbcType=VARCHAR},
+			</if>
+     		<if test="ownScreenCount != null">
+        		#{ownScreenCount,jdbcType=INTEGER},
+      		</if>
+			<if test="notes != null">
+				#{notes,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update
+		id="updateByPrimaryKeySelective"
+		parameterType="cn.xjwlfw.yeshenghuo.model.BusinessWechatUser">
+		update business_wechat_user
+		<set>
+			<if test="role != null">
+				role = #{role,jdbcType=VARCHAR},
+			</if>
+      		<if test="ownScreenCount != null">
+        		own_screen_count = #{ownScreenCount,jdbcType=INTEGER},
+      		</if>
+			<if test="notes != null">
+				notes = #{notes,jdbcType=VARCHAR},
+			</if>
+			<if test="ownScreenCount != null">
+				own_screen_count = #{ownScreenCount,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

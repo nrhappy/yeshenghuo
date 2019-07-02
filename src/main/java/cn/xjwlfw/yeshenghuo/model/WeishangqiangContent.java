@@ -1,0 +1,106 @@
+package cn.xjwlfw.yeshenghuo.model;
+
+import java.util.Date;
+
+public class WeishangqiangContent {
+    private Integer id;
+
+    private Integer wechatUserId;
+
+    private Integer weishangqiangId;
+    
+    private Integer type;
+    
+    private Integer ownScreenId;
+    
+    private Integer dashangId;
+
+    private Integer dashangTarId;
+    
+    private String imgUrl;
+
+    private String content;
+
+    private Date createTime;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getWechatUserId() {
+		return wechatUserId;
+	}
+
+	public void setWechatUserId(Integer wechatUserId) {
+		this.wechatUserId = wechatUserId;
+	}
+
+	public Integer getWeishangqiangId() {
+		return weishangqiangId;
+	}
+
+	public void setWeishangqiangId(Integer weishangqiangId) {
+		this.weishangqiangId = weishangqiangId;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getOwnScreenId() {
+		return ownScreenId;
+	}
+
+	public void setOwnScreenId(Integer ownScreenId) {
+		this.ownScreenId = ownScreenId;
+	}
+
+	public Integer getDashangId() {
+		return dashangId;
+	}
+
+	public void setDashangId(Integer dashangId) {
+		this.dashangId = dashangId;
+	}
+
+	public Integer getDashangTarId() {
+		return dashangTarId;
+	}
+
+	public void setDashangTarId(Integer dashangTarId) {
+		this.dashangTarId = dashangTarId;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+    
+}

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Porject - 控制台</title>
+    <link href="resource/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/console.css" rel="stylesheet">
+    
+  </head>
+    
+  <body style="padding:15px; overflow:auto;">
+    <h4>功能&nbsp;>&nbsp;微上墙</h4>
+    <hr>
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a data-toggle="tab" href="#open-instruction">开通说明</a>
+      </li>
+      <li>
+        <a data-toggle="tab" href="#function-set">功能设置</a>
+      </li>
+      <li>
+        <a data-toggle="tab" href="#pushed-content">上墙内容</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="open-instruction" style="padding:30px 15px;">
+        <style>
+		  .p1, .p2 { list-style-type:none; color:#666; margin-top:30px; }
+		  .p1 h4, .p2 h4 { margin-top:18px; margin-bottom:18px; }
+		  .p1 li, .p2 li { font-size:12px; margin-top:10px; }
+		</style>
+        <ul class="p1">
+          <h4>开通说明</h4>
+          <li>现场互动杀手锏，用户通过微信公众号中的微上墙链接发布图片文字，该图片文字会在酒吧现场大屏幕显示，微上墙可以实现现场顾客良好互动。</li>
+          <li>使用微上墙流程：</li>
+          <li>1，登录微喵后台开通微上墙；</li>
+          <li>2，在功能设置中，打开大屏幕；</li>
+          <li>3，用户进入微上墙功能页面，发布图片文字等内容；</li>
+          <li>4，用户发布的图片文字内容，将在大屏幕上显示；</li>
+          <li>注：微喵微上墙中的互动收入微喵将收取一定比例的分成。</li>
+        </ul>
+        <ul class="p2">
+          <h4>开通条件</h4>
+          <li>1，必须为vip账号</li>
+          <li>2，现场应该配备有大屏幕，建议分辨率为800*600以上</li>
+        </ul>
+        <div class="row">
+          <button class="btn btn-success col-xs-2 col-xs-offset-5">开通</button>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="function-set" style="padding:15px;">
+        <style>
+		  .list-group { border:0px; }
+		  .list-group-item { border-left:0px; border-right:0px; padding:20px 0px; }
+		  .list-group-item:first-child { border-top:0px; }
+		  .list-group-item:last-child { border-bottom:0px; }
+		</style>
+        <ul class="list-group" style="margin-top:15px;">
+          <li class="list-group-item">
+            <span class="list-group-item-heading">大屏幕</span>
+            <a class="pull-right" target="view_window" href="<%=request.getContextPath()%>${consoleMenuLevel2.url}/console/function/weishangqiangManage/screen">打开大屏幕</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">功能暂停 已暂停</span>
+            <a class="pull-right" href="#">开启</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">设置名称  微上墙</span>
+            <a data-toggle="modal" class="pull-right" href="javascript:call();">编辑</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">酒吧位置 山西省太原市小店区</span>
+            <a class="pull-right" href="#">编辑</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">微上墙标题 欢迎光临香蕉网络01</span>
+            <a class="pull-right" href="#">设置</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">设置大屏幕背景 请上传宽度大于1000px，高度大于600px的图片</span>
+            <a class="pull-right" href="#">上传</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">微上墙文字大小  大号</span>
+            <a class="pull-right" href="#">设置</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">敏感词屏蔽</span>
+            <a class="pull-right" href="#">设置</a>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">大屏幕URL http://www.wemew.cn/weionwallmsg?barid=12a632e4-211e-4b25-bed9-8814b1ca9f9f</span>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">手机页面访问次数 2</span>
+          </li>
+          <li class="list-group-item">
+            <span class="list-group-item-heading">开通时间 2017-02-09 21:03</span>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-pane fade" id="pushed-content"  style="padding:25px 15px;">
+        <style>
+		  .table tr th { text-align:center; background-color:#eee; }
+		  .table tr td { text-align:center; }
+		</style>
+        <table class="table table-bordered">
+          <tr>
+            <th>内容</td>
+            <th>头像</td>
+            <th>昵称</td>
+            <th>性别</td>
+            <th>时间</td>
+            <th>操作</td>
+          </tr>
+          <tr>
+            <td>你好</td>
+            <td><img src="resource/img/me.jpg" width="35" height="35"></td>
+            <td>香蕉网络</td>
+            <td>男</td>
+            <td>2017-02-09 21:43</td>
+            <td><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td>你好</td>
+            <td><img src="resource/img/me.jpg" width="35" height="35"></td>
+            <td>香蕉网络</td>
+            <td>男</td>
+            <td>2017-02-09 21:43</td>
+            <td><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td>你好</td>
+            <td><img src="resource/img/me.jpg" width="35" height="35"></td>
+            <td>香蕉网络</td>
+            <td>男</td>
+            <td>2017-02-09 21:43</td>
+            <td><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <th colspan="6" style="text-align:right;">
+              <button class="btn btn-info btn-sm">全选</button>
+              <button class="btn btn-warning btn-sm">加入黑名单</button>
+              <button class="btn btn-danger btn-sm">删除</button>
+              <button class="btn btn-danger btn-sm">删除全部消息</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+    <!-- 模态框（Modal） -->
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">设置功能名称</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <label for="name">功能名称 (不超过8个字符)：</label>
+                <input name="name" class="form-control" type="text">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-success btn-sm">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+
+
+    
+	<script src="resource/jquery/js/jquery.js"></script>
+	<script src="resource/bootstrap/js/bootstrap.js"></script>
+	<script>
+	  function call() {
+	    $('#myModal').modal('show');
+	    $(".modal-backdrop").remove();
+	  }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,207 @@
+package cn.xjwlfw.yeshenghuo.controller.customer;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.xjwlfw.yeshenghuo.model.WechatUser;
+import cn.xjwlfw.yeshenghuo.service.business.functionManage.WechatService;
+import cn.xjwlfw.yeshenghuo.service.customer.WeishangqiangService;
+import cn.xjwlfw.yeshenghuo.system.base.BaseController;
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+
+/**
+ * 微上墙 - 微信用户端
+ */
+@Controller
+@RequestMapping(value = "/customer/weishangqiang")
+public class WeishangqiangController extends BaseController {
+	
+	Logger logger = Logger.getLogger(WeishangqiangController.class);
+
+	@Autowired
+	private WeishangqiangService weishangqiangService;
+	
+	@Autowired
+	private WechatService wechatService;
+
+	/**
+	 * 页面
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月19日
+	 */
+	@RequestMapping(value = "")
+	public String index(@RequestParam(value = "wechatUserId") int wechatUserId, @RequestParam(value = "businessId") int businessId, Model model) { return weishangqiangService.index(wechatUserId, businessId, model); }
+
+	/**
+	 * 微信登陆页面
+	 * 
+	 * @author niurui
+	 * @since 2017年4月2日
+	 */
+	@RequestMapping(value = "/weixinIndex")
+	public String weixinIndex(HttpServletRequest request, Model model) {
+		String businessIdStr = request.getParameter("businessId");
+		int businessId = Integer.parseInt(businessIdStr + "");
+		String code = request.getParameter("code");
+		Map<String, String> map = wechatService.codeChangeAccessToken(code);
+		WechatUser user = wechatService.getUserWithoutSubscribe(map.get("access_token"), map.get("openid"), businessId);
+		return weishangqiangService.index(user.getId() , businessId, model);
+	}
+
+	/**
+	 * 上墙内容获取
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月19日
+	 */
+	@RequestMapping(value = "/content")
+	@ResponseBody
+	public Result content(
+			@RequestParam(value = "businessId") int businessId,
+			@RequestParam(value = "lastTime") String lastTime) {
+		Result result = weishangqiangService.content(businessId, lastTime);
+		return result;
+	}
+
+	/**
+	 * 上墙内容发送
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月19日
+	 */
+	@RequestMapping(value = "/send")
+	@ResponseBody
+	public Result send(
+			@RequestParam(value = "wechatUserId") int wechatUserId,
+			@RequestParam(value = "weishangqiangId") int weishangqiangId,
+			@RequestParam(value = "content") String content) {
+		return weishangqiangService.send(wechatUserId, weishangqiangId, content);
+	}
+
+	/**
+	 * 霸屏内容发送
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月19日
+	 */
+	@RequestMapping(value = "/sendOwnScreen")
+	@ResponseBody
+	public Result sendOwnScreen(
+			@RequestParam(value = "wechatUserId") int wechatUserId,
+			@RequestParam(value = "weishangqiangId") int weishangqiangId,
+			@RequestParam(value = "ownScreenId") int ownScreenId,
+			@RequestParam(value = "imgUrl") String imgUrl,
+			@RequestParam(value = "content") String content) {
+		return weishangqiangService.sendOwnScreen(wechatUserId, weishangqiangId, ownScreenId, imgUrl, content);
+	}
+
+	/**
+	 * 打赏内容发送
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月19日
+	 */
+	@RequestMapping(value = "/sendDashang")
+	@ResponseBody
+	public Result sendDashang(
+			@RequestParam(value = "wechatUserId") int wechatUserId,
+			@RequestParam(value = "weishangqiangId") int weishangqiangId,
+			@RequestParam(value = "dashangId") int dashangId,
+			@RequestParam(value = "dashengTarId") int dashengTarId,
+			@RequestParam(value = "content") String content) {
+		return weishangqiangService.sendDashang(wechatUserId, weishangqiangId, dashangId, dashengTarId, content);
+	}
+	
+	/**
+	 * 霸屏商品列表获取
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月4日
+	 */
+	@RequestMapping(value = "/ownScreenList", method = RequestMethod.GET)
+	@ResponseBody
+	public Result ownScreenList() {
+		return weishangqiangService.ownScreenList();
+	}
+	
+	/**
+	 * 霸屏-订单生成
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月4日
+	 */
+	@RequestMapping(value = "/createOrder", method = RequestMethod.POST)
+	@ResponseBody
+	public Result createOrder(HttpServletRequest request,
+			@RequestParam(value = "wechatUserId") int wechatUserId,
+			@RequestParam(value = "ownScreenId") int ownScreenId,
+			@RequestParam(value = "businessId") int businessId,
+			@RequestParam(value = "weishangqiangId") int weishangqiangId,
+			@RequestParam(value = "goodsType") short goodsType) {
+		return weishangqiangService.createOrder(request, wechatUserId, ownScreenId, businessId, weishangqiangId, goodsType);
+	}
+	
+	/**
+	 * 霸屏-订单支付
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月4日
+	 */
+	@RequestMapping(value = "/payOrder", method = RequestMethod.POST)
+	@ResponseBody
+	public Result payOrder(
+			@RequestParam(value = "orderNo") String orderNo,
+			@RequestParam(value = "wechatUserId") int wechatUserId) {
+		return weishangqiangService.payOrder(orderNo, wechatUserId);
+	}
+	
+	/**
+	 * 霸屏-免费次数使用
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月4日
+	 */
+	@RequestMapping(value = "/ownScreenUsed", method = RequestMethod.POST)
+	@ResponseBody
+	public Result ownScreenUsed(
+			@RequestParam(value = "wechatUserId") int wechatUserId,
+			@RequestParam(value = "businessId") int businessId) {
+		return weishangqiangService.ownScreenUsed(businessId, wechatUserId);
+	}
+	
+	/**
+	 * 设置微上墙当前状态可用
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月4日
+	 */
+	@RequestMapping(value = "/setWeishangqiangOn")
+	@ResponseBody
+	public Result setWeishangqiangOn(@RequestParam(value = "weishangqiangId") int weishangqiangId) {
+		return weishangqiangService.setWeishangqiangOn(weishangqiangId);
+	}
+	
+	/**
+	 * 设置微上墙当前状态不可用
+	 * 
+	 * @author liyijun
+	 * @since 2017年4月4日
+	 */
+	@RequestMapping(value = "/setWeishangqiangOff")
+	@ResponseBody
+	public Result setWeishangqiangOff(@RequestParam(value = "weishangqiangId") int weishangqiangId) {
+		return weishangqiangService.setWeishangqiangOff(weishangqiangId);
+	}
+
+}

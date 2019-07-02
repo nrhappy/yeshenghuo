@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+  
+  <!-- 导入 jdbc.properties 属性文件 -->
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location" value="classpath:/config/properties/jdbc.properties" />
+  </bean>
+  
+  <!-- 配置数据源 -->
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="${driver}" />
+    <property name="url" value="${url}" />
+    <property name="username" value="${username}" />
+    <property name="password" value="${password}" />
+    <property name="initialSize" value="${initialSize}" />
+    <property name="maxActive" value="${maxActive}" />
+    <property name="maxIdle" value="${maxIdle}" />
+    <property name="minIdle" value="${minIdle}" />
+    <property name="maxWait" value="${maxWait}" />
+  </bean>
+  
+  <!-- 配置SqlSession工厂 -->
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="mapperLocations" value="classpath:/cn/xjwlfw/yeshenghuo/mapper/*/*.xml" />
+    <property name="configLocation" value="classpath:/config/mybatis/mybatis.xml" />
+  </bean>
+  
+  <!-- 配置映射文件扫描器 -->
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="cn.xjwlfw.yeshenghuo.mapper" />
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+  </bean>
+  
+  <!-- 配置数据源 事务级管理 -->
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+  
+</beans>

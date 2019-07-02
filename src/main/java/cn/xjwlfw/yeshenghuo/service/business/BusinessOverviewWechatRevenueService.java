@@ -1,0 +1,20 @@
+package cn.xjwlfw.yeshenghuo.service.business;
+
+import java.math.BigDecimal;
+
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.model.Business;
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+
+public interface BusinessOverviewWechatRevenueService {
+	
+	public String index(Model model);
+	
+	public Result revenueCount (int nears);
+	
+	public Result cashOut (BigDecimal amount);
+	
+	public Result cashOutSet (Business business);
+
+}

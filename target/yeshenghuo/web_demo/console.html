@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Porject - 控制台</title>
+    <link href="resource/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/console.css" rel="stylesheet">
+    
+  </head>
+    
+  <body>
+    <div class="topbar">
+    
+      <a class="navbar-brand" href="#">Closer</a>      
+      <ul class="pull-left">
+        <li><a id="support" href="javascript:;" onClick="pushErrMsg('pushErrMsg！')"><span class="glyphicon glyphicon-info-sign small"></span>&nbsp;支持</a></li>
+        <li><a id="message" href="javascript:;" onClick="pushSucMsg('pushSucMsg！')"><span class="glyphicon glyphicon-envelope small"></span>&nbsp;消息</a></li>
+        <li><a id="overview" href="javascript:;" onClick="pushWarMsg('pushWarMsg！')"><span class="glyphicon glyphicon-home small"></span>&nbsp;总览</a></li>
+      </ul>      
+      <ul class="pull-right small">
+        <li><a class="text-muted" href="javascript:pushSucMsg('退出成功！');"><span class="glyphicon glyphicon-log-out"></span>&nbsp;退出登录</a></li>
+        <li><a class="text-muted" id="refresh" href="javascript:;" onClick="pushErrMsg('pushErrMsg！')"><span class="glyphicon glyphicon-refresh small"></span>&nbsp;刷新工作区</a></li>
+        <li class="text-muted">现在是：<span id="current-time" class="text-primary"></span></li>
+        <li class="text-muted">欢迎您：<span class="glyphicon glyphicon-user text-primary"></span>&nbsp;<span id="current-user" class="text-primary">超级管理员</span></li>
+      </ul>
+      
+    </div>
+    
+    <div class="sidebar" style=" overflow-y:auto; auto-x:hidden;">
+      
+      <div class="panel-group" id="accordion">
+        
+        <div class="panel no-shadow">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <span class="glyphicon glyphicon-tasks small"></span>&nbsp;导航菜单
+            </h4>
+          </div>
+        </div>
+      
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <span class="glyphicon glyphicon-tags small"></span>&nbsp;
+              <a data-toggle="collapse" data-parent="#accordion" href="#item1">item1<span class="glyphicon glyphicon-chevron-left pull-right"></span></a>
+            </h4>
+          </div>
+          <div class="panel-collapse collapse" id="item1">
+            <div class="panel-body">
+              <ul class="nav nav-pills nav-stacked">
+                <li><a target="main-frame" href="http://www.baidu.com"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-1</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-2</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-3</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+              </ul>
+            </div>
+          </div>          
+        </div>
+      
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <span class="glyphicon glyphicon-tags small"></span>&nbsp;
+              <a data-toggle="collapse" data-parent="#accordion" href="#item2">item2<span class="glyphicon glyphicon-chevron-left pull-right"></span></a>
+            </h4>
+          </div>
+          <div class="panel-collapse collapse" id="item2">
+            <div class="panel-body">
+              <ul class="nav nav-pills nav-stacked">
+                <li><a target="main-frame" href="http://www.baidu.com"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-1</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-2</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-3</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+              </ul>
+            </div>
+          </div>          
+        </div>
+      
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <span class="glyphicon glyphicon-tags small"></span>&nbsp;
+              <a data-toggle="collapse" data-parent="#accordion" href="#item3">item3<span class="glyphicon glyphicon-chevron-left pull-right"></span></a>
+            </h4>
+          </div>
+          <div class="panel-collapse collapse" id="item3">
+            <div class="panel-body">
+              <ul class="nav nav-pills nav-stacked">
+                <li><a target="main-frame" href="http://www.baidu.com"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-1</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-2</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-3</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tag small"></span>&nbsp;item1-4</a></li>
+              </ul>
+            </div>
+          </div>          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    <div class="workspace">
+      <iframe name="main-frame" src="overview.html">
+      </iframe>
+    </div>
+    
+	<script src="resource/jquery/js/jquery.js"></script>
+	<script src="resource/bootstrap/js/bootstrap.js"></script>
+    <script src="js/base.js"></script>
+    <script src="js/console.js"></script>
+  </body>
+</html>

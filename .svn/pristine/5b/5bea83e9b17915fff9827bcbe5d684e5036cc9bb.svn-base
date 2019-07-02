@@ -1,0 +1,224 @@
+package cn.xjwlfw.yeshenghuo.service.business.functionManage.impl;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+
+import cn.xjwlfw.yeshenghuo.mapper.BusinessWechatUserMapper;
+import cn.xjwlfw.yeshenghuo.mapper.WechatUserMapper;
+import cn.xjwlfw.yeshenghuo.model.BusinessWechatUser;
+import cn.xjwlfw.yeshenghuo.model.WechatUser;
+import cn.xjwlfw.yeshenghuo.service.business.functionManage.WechatService;
+import cn.xjwlfw.yeshenghuo.system.util.SSLClient;
+
+@Service
+public class WechatServiceImpl implements WechatService {
+	Logger logger = Logger.getLogger(WechatServiceImpl.class);
+
+	private static final String APP_ID = "wxb4718a4eac30e9cc";
+
+	private static final String APP_SECRET = "8630218267a77351319adecbeb816ef4";
+	
+	@Autowired
+	private WechatUserMapper wechatUserMapper;
+	
+	@Autowired
+	private BusinessWechatUserMapper businessWechatUserMapper;
+	
+	@Deprecated
+	@Override
+	public String getAccessToken() {
+		Map<String, String> param = new HashMap<>();
+		param.put("grant_type", "client_credential");
+		param.put("appid", APP_ID);
+		param.put("secret", APP_SECRET);
+		
+		String json = this.doGet("https://api.weixin.qq.com/cgi-bin/token", param, "utf-8");
+		Map<String, String> map = JSON.parseObject(json, Map.class);
+		return map.get("access_token");
+	}
+
+	@Deprecated
+	@Override
+	public String createTicket(String accessToken, String scene_id) {
+		String url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + accessToken;
+		Map<String, Object> param = new HashMap<>();
+		param.put("expire_seconds", "120");
+//		param.put("action_name", "QR_SCENE");
+		param.put("action_name", "QR_LIMIT_SCENE");
+		Map<String, Object> actionInfo = new HashMap<>();
+		Map<String, String> scene = new HashMap<>();
+		scene.put("scene_id", scene_id);
+		actionInfo.put("scene", scene);
+		param.put("action_info", actionInfo);
+		String json = this.doPost(url, param, "utf-8");
+		Map<String, String> ticketMap = JSON.parseObject(json, Map.class);
+		return ticketMap.get("ticket");
+	}
+	
+	public String doGet(String url, Map<String, String> map, String charset) {
+		HttpClient httpClient = null;
+		HttpGet httpGet = null;
+		String result = null;
+		if (map != null && map.size() > 0) {
+			StringBuffer sb = new StringBuffer(url);
+			sb.append("?");
+			for(String key : map.keySet()) {
+				sb.append(key).append("=").append(map.get(key)).append("&");
+			}
+			String str = sb.toString();
+			url = str.substring(0, str.length() - 1);
+		}
+		try {
+			httpClient = new SSLClient();
+			httpGet = new HttpGet(url);
+			HttpResponse response = httpClient.execute(httpGet);
+			if (response != null) {
+				HttpEntity resEntity = response.getEntity();
+				if (resEntity != null) {
+					result = EntityUtils.toString(resEntity, charset);
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+	public String doPost(String url, Map<String, Object> map, String charset) {
+		HttpClient httpClient = null;
+		HttpPost httpPost = null;
+		String result = null;
+		try {
+			httpClient = new SSLClient();
+			httpPost = new HttpPost(url);
+			StringEntity entity = new StringEntity(JSON.toJSONString(map), charset);
+			httpPost.setEntity(entity);
+			HttpResponse response = httpClient.execute(httpPost);
+			if (response != null) {
+				HttpEntity resEntity = response.getEntity();
+				if (resEntity != null) {
+					result = EntityUtils.toString(resEntity, charset);
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+	@Deprecated
+	@Override
+	public WechatUser getWechatUserInfo(String openId) {
+		String url = "https://api.weixin.qq.com/cgi-bin/user/info";
+		Map<String, String> param = new HashMap<>();
+		param.put("access_token", this.getAccessToken());
+		param.put("lang", "zh_CN");
+		param.put("openid", openId);
+		String json = this.doGet(url, param, "utf-8");
+		Map<String, Object> map = JSON.parseObject(json, Map.class);
+		return genWechatUserByOpenId(map);
+	}
+	
+	private WechatUser genWechatUserByOpenId(Map<String, Object> map) {
+		WechatUser user = new WechatUser();
+		user.setOpenId((String) map.get("openid"));
+		user.setNickname((String) map.get("nickname"));
+		user.setProfile((String) map.get("headimgurl"));
+		user.setSex(Short.parseShort(map.get("sex") + ""));
+		user.setNotes((String) map.get("remark"));
+		user.setAddress((String)map.get("country") + map.get("province") + map.get("city"));
+		return user;
+	}
+
+	@Deprecated
+	@Override
+	public void saveOrUpdateWechatUser(String openId, String subscribe) {
+		WechatUser user = null;
+		if ("subscribe".equals(subscribe)) {
+			user = this.getWechatUserInfo(openId);
+			user.setSubscribe(1);
+		} else {
+			user = new WechatUser();
+			user.setOpenId(openId);
+			user.setSubscribe(0);
+		}
+//		saveOrUpdate(user);
+	}
+
+	private void saveOrUpdate(WechatUser user, int businessId) {
+		WechatUser exist = wechatUserMapper.selectByOpenId(user.getOpenId());
+		if (exist == null) {
+			wechatUserMapper.insert(user);
+		} else {
+			wechatUserMapper.updateByOpenId(user);
+			user.setId(exist.getId());
+		}
+		saveRelation(user.getId(), businessId);
+	}
+
+	private void saveRelation(Integer id, int businessId) {
+		BusinessWechatUser record = new BusinessWechatUser();
+		record.setBusinessId(businessId);
+		record.setWechatUserId(id);
+		record.setRole("0");
+		record.setNotes("");
+		BusinessWechatUser relation = businessWechatUserMapper.selectByBusinessId(record);
+		if (relation == null) {
+			businessWechatUserMapper.insert(record);
+		}
+	}
+
+	@Override
+	public Map<String, String> codeChangeAccessToken(String code) {
+		String url = "https://api.weixin.qq.com/sns/oauth2/access_token";
+		Map<String, String> param = new HashMap<>();
+		param.put("appid", APP_ID);
+		param.put("secret", APP_SECRET);
+		param.put("code", code);
+		param.put("grant_type", "authorization_code");
+		String json = this.doGet(url, param, "utf-8");
+		return JSON.parseObject(json, Map.class);
+	}
+
+	@Override
+	public WechatUser getUserWithoutSubscribe(String accessToken, String openId, int businessId) {
+		String url = "https://api.weixin.qq.com/cgi-bin/user/info";
+		Map<String, String> param = new HashMap<>();
+		param.put("access_token", this.getAccessToken());
+		param.put("openid", openId);
+		param.put("lang", "zh_CN");
+		String json = this.doGet(url, param, "utf-8");
+		Map<String, Object> map = JSON.parseObject(json, Map.class);
+		WechatUser user = genWechatUserByOpenId(map);
+		saveOrUpdate(user, businessId);
+		return user;
+	}
+
+//	@Override
+//	public boolean checkAccessToken(String accessToken, String openId) {
+//		String url = "https://api.weixin.qq.com/sns/auth";
+//		Map<String, String> param = new HashMap<>();
+//		param.put("access_token", accessToken);
+//		param.put("openid", openId);
+//		String json = this.doGet(url, param, "utf-8");
+//		Map<String, String> map = JSON.parseObject(json, Map.class);
+//		if ("0".equals(map.get("errcode"))){
+//			return true;
+//		}
+//		return false;
+//	}
+
+}

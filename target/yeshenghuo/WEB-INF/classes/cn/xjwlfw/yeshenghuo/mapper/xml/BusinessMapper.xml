@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.BusinessMapper">
+	<resultMap
+		id="BaseResultMap"
+		type="cn.xjwlfw.yeshenghuo.model.Business">
+		<id
+			column="id"
+			jdbcType="INTEGER"
+			property="id" />
+		<result
+			column="logo"
+			jdbcType="VARCHAR"
+			property="logo" />
+		<result
+			column="qrcode"
+			jdbcType="VARCHAR"
+			property="qrcode" />
+		<result
+			column="name"
+			jdbcType="VARCHAR"
+			property="name" />
+		<result
+			column="addrress"
+			jdbcType="VARCHAR"
+			property="addrress" />
+		<result
+			column="tel"
+			jdbcType="VARCHAR"
+			property="tel" />
+		<result
+			column="summary"
+			jdbcType="VARCHAR"
+			property="summary" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, logo, qrcode, name, addrress, tel, summary
+	</sql>
+	<select
+		id="selectByPrimaryKey"
+		parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from business
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select
+		id="selectByName"
+		parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from business
+		where name = #{name,jdbcType=VARCHAR}
+	</select>
+	<delete
+		id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from business
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert
+		id="insert"
+		parameterType="cn.xjwlfw.yeshenghuo.model.Business">
+	    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+	      SELECT LAST_INSERT_ID()
+	    </selectKey>
+		insert into business (id, logo, qrcode name,
+		addrress, tel, summary
+		)
+		values (#{id,jdbcType=INTEGER}, #{logo,jdbcType=VARCHAR},
+		#{qrcode,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{addrress,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert
+		id="insertSelective"
+		parameterType="cn.xjwlfw.yeshenghuo.model.Business">
+	    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+	      SELECT LAST_INSERT_ID()
+	    </selectKey>
+		insert into business
+		<trim
+			prefix="("
+			suffix=")"
+			suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="logo != null">
+				logo,
+			</if>
+			<if test="qrcode != null">
+				qrcode,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="addrress != null">
+				addrress,
+			</if>
+			<if test="tel != null">
+				tel,
+			</if>
+			<if test="summary != null">
+				summary,
+			</if>
+		</trim>
+		<trim
+			prefix="values ("
+			suffix=")"
+			suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="logo != null">
+				#{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="qrcode != null">
+				#{qrcode,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="addrress != null">
+				#{addrress,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				#{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="summary != null">
+				#{summary,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update
+		id="updateByPrimaryKeySelective"
+		parameterType="cn.xjwlfw.yeshenghuo.model.Business">
+		update business
+		<set>
+			<if test="logo != null">
+				logo = #{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="qrcode != null">
+				qrcode = #{qrcode,jdbcType=VARCHAR},
+			</if>
+			<if test="addrress != null">
+				addrress = #{addrress,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				tel = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="summary != null">
+				summary = #{summary,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update
+		id="updateByPrimaryKey"
+		parameterType="cn.xjwlfw.yeshenghuo.model.Business">
+		update business
+		set logo = #{logo,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		qrcode = #{qrcode,jdbcType=VARCHAR},
+		addrress = #{addrress,jdbcType=VARCHAR},
+		tel = #{tel,jdbcType=VARCHAR},
+		summary = #{summary,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

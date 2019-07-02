@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.DashangMapper">
+  <resultMap id="BaseResultMap" type="cn.xjwlfw.yeshenghuo.model.Dashang">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="weishangqiang_id" jdbcType="INTEGER" property="weishangqiangId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
+    <result column="video" jdbcType="VARCHAR" property="video" />
+    <result column="duration" jdbcType="SMALLINT" property="duration" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, weishangqiang_id, name, img, video, duration, price
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dashang
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectListByWeishangqiangId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dashang
+    where weishangqiang_id = #{weishangqiangId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dashang
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.xjwlfw.yeshenghuo.model.Dashang">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dashang (weishangqiang_id, name, img, video, 
+      duration, price)
+    values (#{weishangqiangId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}, #{video,jdbcType=VARCHAR}, 
+      #{duration,jdbcType=SMALLINT}, #{price,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xjwlfw.yeshenghuo.model.Dashang">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dashang
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="weishangqiangId != null">
+        weishangqiang_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="img != null">
+        img,
+      </if>
+      <if test="video != null">
+        video,
+      </if>
+      <if test="duration != null">
+        duration,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="weishangqiangId != null">
+        #{weishangqiangId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null">
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="video != null">
+        #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null">
+        #{duration,jdbcType=SMALLINT},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xjwlfw.yeshenghuo.model.Dashang">
+    update dashang
+    <set>
+      <if test="weishangqiangId != null">
+        weishangqiang_id = #{weishangqiangId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null">
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="video != null">
+        video = #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null">
+        duration = #{duration,jdbcType=SMALLINT},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xjwlfw.yeshenghuo.model.Dashang">
+    update dashang
+    set weishangqiang_id = #{weishangqiangId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR},
+      video = #{video,jdbcType=VARCHAR},
+      duration = #{duration,jdbcType=SMALLINT},
+      price = #{price,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

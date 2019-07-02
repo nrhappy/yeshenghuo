@@ -1,0 +1,40 @@
+package cn.xjwlfw.yeshenghuo.service.corporation.impl;
+
+import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.mapper.UserBusinessMapper;
+import cn.xjwlfw.yeshenghuo.mapper.UserMapper;
+import cn.xjwlfw.yeshenghuo.model.Business;
+import cn.xjwlfw.yeshenghuo.model.User;
+import cn.xjwlfw.yeshenghuo.model.UserBusiness;
+import cn.xjwlfw.yeshenghuo.service.corporation.CorporationManageService;
+
+@Service
+public class CorporationManageServiceImpl implements CorporationManageService {
+
+	@Autowired
+	private UserMapper userDao;
+
+	@Autowired
+	private UserBusinessMapper userBusinessDao;
+	
+	@Override
+	public String toManage(Model model) {
+		try {
+			String account = (String) SecurityUtils.getSubject().getPrincipal();
+			if (account != null) {
+				return "/corporation/manage";
+			} else {
+				return "redirect:/corporation/login";
+			}
+			
+
+		} catch (Exception e) {
+			return "redirect:/corporation/login";
+		}
+	}
+
+}

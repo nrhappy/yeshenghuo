@@ -1,0 +1,397 @@
+package cn.xjwlfw.yeshenghuo.service.customer.impl;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.mapper.AgencyBusinessMapper;
+import cn.xjwlfw.yeshenghuo.mapper.AgencyMapper;
+import cn.xjwlfw.yeshenghuo.mapper.BusinessMapper;
+import cn.xjwlfw.yeshenghuo.mapper.BusinessWechatUserMapper;
+import cn.xjwlfw.yeshenghuo.mapper.BusinessWeishangqiangMapper;
+import cn.xjwlfw.yeshenghuo.mapper.CorporationMapper;
+import cn.xjwlfw.yeshenghuo.mapper.DashangMapper;
+import cn.xjwlfw.yeshenghuo.mapper.DashangTarMapper;
+import cn.xjwlfw.yeshenghuo.mapper.OrderMapper;
+import cn.xjwlfw.yeshenghuo.mapper.OwnScreenMapper;
+import cn.xjwlfw.yeshenghuo.mapper.WechatUserMapper;
+import cn.xjwlfw.yeshenghuo.mapper.WeishangqiangContentMapper;
+import cn.xjwlfw.yeshenghuo.mapper.WeishangqiangMapper;
+import cn.xjwlfw.yeshenghuo.model.Agency;
+import cn.xjwlfw.yeshenghuo.model.AgencyBusiness;
+import cn.xjwlfw.yeshenghuo.model.Business;
+import cn.xjwlfw.yeshenghuo.model.BusinessWechatUser;
+import cn.xjwlfw.yeshenghuo.model.Corporation;
+import cn.xjwlfw.yeshenghuo.model.Dashang;
+import cn.xjwlfw.yeshenghuo.model.DashangTar;
+import cn.xjwlfw.yeshenghuo.model.Order;
+import cn.xjwlfw.yeshenghuo.model.OwnScreen;
+import cn.xjwlfw.yeshenghuo.model.WechatUser;
+import cn.xjwlfw.yeshenghuo.model.Weishangqiang;
+import cn.xjwlfw.yeshenghuo.model.WeishangqiangContent;
+import cn.xjwlfw.yeshenghuo.model.WeishangqiangContentResult;
+import cn.xjwlfw.yeshenghuo.service.customer.WeishangqiangService;
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+import cn.xjwlfw.yeshenghuo.system.util.DateUtil;
+import cn.xjwlfw.yeshenghuo.system.util.WcPay.WcPay;
+
+@Service
+public class WeishangqiangServiceImpl implements WeishangqiangService {
+	
+	private static final Integer COMMON_CONTENT_TYPE = 0;
+	private static final Integer OWN_SCREEN_CONTENT_TYPE = 1;
+	private static final Integer DASHANG_CONTENT_TYPE = 2;
+
+	@Autowired
+	private BusinessMapper businessDao;
+
+	@Autowired
+	private WeishangqiangMapper weishangqiangDao;
+	
+	@Autowired
+	private WeishangqiangContentMapper weishangqiangContentDao;
+
+	@Autowired
+	private BusinessWeishangqiangMapper businessWeishangqiangDao;
+
+	@Autowired
+	private WechatUserMapper wechatUserDao;
+	
+	@Autowired
+	private OwnScreenMapper ownScreenDao;;
+	
+	@Autowired
+	private AgencyBusinessMapper agencyBusinessDao;
+	
+	@Autowired
+	private AgencyMapper agencyDao;
+	
+	@Autowired
+	private OrderMapper orderDao;
+	
+	@Autowired
+	private CorporationMapper corporationDao;
+	
+	@Autowired
+	private BusinessWechatUserMapper businessWechatUserDao;
+	
+	@Autowired
+	private DashangMapper dashangDao;
+	
+	@Autowired
+	private DashangTarMapper dashangTarDao;
+
+	@Override
+	public String index(int wechatUserId, int businessId, Model model) {
+		WechatUser currentWechatUser = wechatUserDao.selectByPrimaryKey(wechatUserId);
+		Business currentBusiness = businessDao.selectByPrimaryKey(businessId);
+		Weishangqiang currentWeishangqiang = weishangqiangDao.selectByPrimaryKey(businessWeishangqiangDao.selectByBusinessId(currentBusiness.getId()).getWeishangqiangId());
+		
+		List<WeishangqiangContent> currentWeishangqiangContentList = weishangqiangContentDao.selectByWeishangqiangIdInOrderCreateTimeAsc(currentWeishangqiang.getId());
+		List<WeishangqiangContentResult> currentWeishangqiangContentResultList = new ArrayList<WeishangqiangContentResult>();
+		
+		for (WeishangqiangContent weishangqiangContent : currentWeishangqiangContentList) {
+			WeishangqiangContentResult weishangqiangContentResult = new WeishangqiangContentResult();
+			weishangqiangContentResult.setId(weishangqiangContent.getId());
+			weishangqiangContentResult.setWechatUser(wechatUserDao.selectByPrimaryKey(weishangqiangContent.getWechatUserId()));
+			weishangqiangContentResult.setWeishangqiangId(weishangqiangContent.getWeishangqiangId());
+			weishangqiangContentResult.setType(weishangqiangContent.getType());
+			if (weishangqiangContent.getType() == 1) {
+				weishangqiangContentResult.setOwnScreen(ownScreenDao.selectByPrimaryKey(weishangqiangContent.getOwnScreenId()));
+				weishangqiangContentResult.setImgUrl(weishangqiangContent.getImgUrl());
+			} else if (weishangqiangContent.getType() == 2) {
+				Dashang dashang = dashangDao.selectByPrimaryKey(weishangqiangContent.getDashangId());
+				DashangTar dashangTar = dashangTarDao.selectByPrimaryKey(weishangqiangContent.getDashangTarId());
+				
+				weishangqiangContentResult.setDashang(dashang);
+				weishangqiangContentResult.setDashangTar(dashangTar);
+			}
+			weishangqiangContentResult.setContent(weishangqiangContent.getContent());
+			weishangqiangContentResult.setCreateTime(new SimpleDateFormat("MM-dd HH:mm").format(weishangqiangContent.getCreateTime()));
+			
+			currentWeishangqiangContentResultList.add(weishangqiangContentResult);
+		}
+		BusinessWechatUser businessWechatUser = new BusinessWechatUser();
+		businessWechatUser.setBusinessId(businessId);
+		businessWechatUser.setWechatUserId(wechatUserId);
+		businessWechatUser = businessWechatUserDao.selectByBusinessId(businessWechatUser);
+		
+		List<Dashang> dashangList = dashangDao.selectList();
+		List<DashangTar> dashangTarList = dashangTarDao.selectList();
+		
+		
+		int currentWeishangqiangAccessAccount = Integer.valueOf(currentWeishangqiang.getAccessAccount());		
+		currentWeishangqiang.setAccessAccount(String.valueOf(currentWeishangqiangAccessAccount + 1));
+		weishangqiangDao.updateByPrimaryKeySelective(currentWeishangqiang);
+		
+		model.addAttribute("timestamp", DateUtil.getCurrentTime());
+		model.addAttribute("currentWechatUser", currentWechatUser);
+		model.addAttribute("currentBusiness", currentBusiness);
+		model.addAttribute("businessWechatUser", businessWechatUser);
+		model.addAttribute("currentWeishangqiang", currentWeishangqiang);
+		model.addAttribute("currentWeishangqiangContentResultList", currentWeishangqiangContentResultList);
+		
+		model.addAttribute("dashangList", dashangList);
+		model.addAttribute("dashangTarList", dashangTarList);
+		
+		return "/customer/weishangqiang";
+	}
+
+	@Override
+	public Result content(int businessId, String lastTime) {
+		Business currentBusiness = businessDao.selectByPrimaryKey(businessId);
+		Weishangqiang currentWeishangqiang = weishangqiangDao.selectByPrimaryKey(businessWeishangqiangDao.selectByBusinessId(currentBusiness.getId()).getWeishangqiangId());
+		
+		List<WeishangqiangContent> currentWeishangqiangContentList = weishangqiangContentDao.selectByWeishangqiangIdlastTimeInOrderCreateTimeDesc(currentWeishangqiang.getId(), lastTime);
+		List<WeishangqiangContentResult> currentWeishangqiangContentResultList = new ArrayList<WeishangqiangContentResult>();
+		
+		for (WeishangqiangContent weishangqiangContent : currentWeishangqiangContentList) {
+			WeishangqiangContentResult weishangqiangContentResult = new WeishangqiangContentResult();
+			weishangqiangContentResult.setId(weishangqiangContent.getId());
+			weishangqiangContentResult.setWechatUser(wechatUserDao.selectByPrimaryKey(weishangqiangContent.getWechatUserId()));
+			weishangqiangContentResult.setWeishangqiangId(weishangqiangContent.getWeishangqiangId());
+			weishangqiangContentResult.setType(weishangqiangContent.getType());
+			if (weishangqiangContent.getType() == 1) {
+				weishangqiangContentResult.setOwnScreen(ownScreenDao.selectByPrimaryKey(weishangqiangContent.getOwnScreenId()));
+				weishangqiangContentResult.setImgUrl(weishangqiangContent.getImgUrl());
+			} else if (weishangqiangContent.getType() == 2) {
+				Dashang dashang = dashangDao.selectByPrimaryKey(weishangqiangContent.getDashangId());
+				DashangTar dashangTar = dashangTarDao.selectByPrimaryKey(weishangqiangContent.getDashangTarId());
+				
+				weishangqiangContentResult.setDashang(dashang);
+				weishangqiangContentResult.setDashangTar(dashangTar);
+			}
+			weishangqiangContentResult.setContent(weishangqiangContent.getContent());
+			weishangqiangContentResult.setCreateTime(new SimpleDateFormat("MM-dd HH:mm").format(weishangqiangContent.getCreateTime()));
+			
+			currentWeishangqiangContentResultList.add(weishangqiangContentResult);
+		}
+
+		Result result = new Result();
+		Map<String, Object> data = new HashMap<String, Object>();
+		
+		data.put("currentWeishangqiang", currentWeishangqiang);
+		data.put("currentWeishangqiangContentResultList", currentWeishangqiangContentResultList);
+		result.setCode(0);
+		result.setData(data);
+		result.setMessage("数据获取成功！");
+		result.setTimestamp(DateUtil.getCurrentTime());
+		
+		return result;
+	}
+
+	@Override
+	public Result send(int wechatUserId, int weishangqiangId, String content) {
+		WeishangqiangContent weishangqiangContent = new WeishangqiangContent();
+		weishangqiangContent.setWechatUserId(wechatUserId);
+		weishangqiangContent.setWeishangqiangId(weishangqiangId);
+		weishangqiangContent.setType(COMMON_CONTENT_TYPE);
+		weishangqiangContent.setContent(content);
+		weishangqiangContent.setCreateTime(new Date());
+		
+		if (weishangqiangContentDao.insert(weishangqiangContent) == 1) {
+			return new Result(0, "消息发送成功！");
+		} else {
+			return new Result(1, "消息发送失败！");
+		}
+	}
+
+	@Override
+	public Result sendOwnScreen(int wechatUserId, int weishangqiangId, int ownScreenId, String imgUrl, String content) {
+		OwnScreen ownScreen = ownScreenDao.selectByPrimaryKey(ownScreenId);
+		WeishangqiangContent weishangqiangContent = new WeishangqiangContent();
+		weishangqiangContent.setWechatUserId(wechatUserId);
+		weishangqiangContent.setWeishangqiangId(weishangqiangId);
+		weishangqiangContent.setType(OWN_SCREEN_CONTENT_TYPE);
+		weishangqiangContent.setOwnScreenId(ownScreenId);
+		weishangqiangContent.setImgUrl(imgUrl);
+		weishangqiangContent.setContent(content);
+		weishangqiangContent.setCreateTime(new Date());
+		
+		if (weishangqiangContentDao.insert(weishangqiangContent) == 1) {
+			return new Result(0, "消息发送成功！");
+		} else {
+			return new Result(1, "消息发送失败！");
+		}
+	}
+
+	@Override
+	public Result sendDashang(int wechatUserId, int weishangqiangId, int dashangId, int dashangTarId, String content) {
+		WeishangqiangContent weishangqiangContent = new WeishangqiangContent();
+		weishangqiangContent.setWechatUserId(wechatUserId);
+		weishangqiangContent.setWeishangqiangId(weishangqiangId);
+		weishangqiangContent.setType(DASHANG_CONTENT_TYPE);
+		weishangqiangContent.setDashangId(dashangId);
+		weishangqiangContent.setDashangTarId(dashangTarId);
+		weishangqiangContent.setContent(content);
+		weishangqiangContent.setCreateTime(new Date());
+		
+		if (weishangqiangContentDao.insert(weishangqiangContent) == 1) {
+			return new Result(0, "消息发送成功！");
+		} else {
+			return new Result(1, "消息发送失败！");
+		}
+	}
+
+	@Override
+	public Result ownScreenList() {
+		Result result = new Result();
+		Map<String, Object> data = new HashMap<String, Object>();
+		try {
+			data.put("ownScreenList", ownScreenDao.selectList());
+			
+			result.setData(data);
+			result.setCode(0);
+		} catch (Exception e) {
+			result.setCode(1);
+		}
+		return result;
+	}
+
+	@Override
+	public Result createOrder(HttpServletRequest request, int wechatUserId, int ownScreenId, int businessId, int weishangqiangId, short goodsType) {
+		Order order = new Order();
+		
+		Weishangqiang weishangqiang = weishangqiangDao.selectByPrimaryKey(weishangqiangId);
+		
+		if (weishangqiang.getAvailable() == 0) {
+			return new Result(1, "当前已有人霸屏，请稍候尝试");
+		}
+		
+		WechatUser wechatUser = wechatUserDao.selectByPrimaryKey(wechatUserId);
+		String orderNo = DateUtil.getCurrentTime("yyyyMMddHHmmss") + System.currentTimeMillis();
+		Business business = businessDao.selectByPrimaryKey(businessId);
+		Agency agency = null;
+		AgencyBusiness agencyBusiness = agencyBusinessDao.selectByBusinessId(businessId);
+		if (agencyBusiness != null) { agency = agencyDao.selectByPrimaryKey(agencyBusiness.getAgencyId()); }
+		// short goodsType = 0;
+		OwnScreen ownScreen = ownScreenDao.selectByPrimaryKey(ownScreenId);
+		Dashang dashang = dashangDao.selectByPrimaryKey(ownScreenId);
+		BigDecimal amount = null;
+		if (goodsType == 0) {
+			amount = ownScreen.getPrice();
+		} else {
+			amount = dashang.getPrice();
+		}
+		short status = 0;
+		
+		order.setId(orderNo);
+		order.setWechatUserId(wechatUserId);
+		order.setBusinessId(businessId);
+		order.setGoodsType(goodsType);
+		order.setGoodsId(ownScreen.getId());
+		if (goodsType == 0) {
+			order.setGoodsSummary("夜程序-霸屏服务");
+		} else {
+			order.setGoodsSummary("夜程序-打赏服务");
+		}
+		order.setAmount(amount);
+		order.setBusinessIncome(amount.multiply(business.getRatio()).divide(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_DOWN));
+		if (agency != null) {
+			order.setAgencyId(agency.getId());
+			order.setAgencyIncome(amount.multiply(agency.getRatio()).divide(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_DOWN));
+			order.setCorporationIncome(amount.subtract(order.getBusinessIncome()).subtract(order.getAgencyIncome()));
+		} else {
+			order.setCorporationIncome(amount.subtract(order.getBusinessIncome()));
+		}
+		order.setStatus(status);
+		order.setCreateTime(new Date());
+		order.setUpdateTime(new Date());
+		
+		if (orderDao.insertSelective(order) == 1) {
+			Map<String, Object> orderInfo = WcPay.orderInfo(wechatUser.getOpenId(), orderNo, amount.multiply(new BigDecimal("100")).setScale(0).toString(), order.getGoodsSummary(), request);
+			orderInfo.put("orderNo", orderNo);
+			return new Result(0, "", orderInfo);
+		} else {
+			return new Result(1, "订单生成失败！");
+		}
+	}
+
+	@Override
+	public Result payOrder(String orderNo, int wechatUserId) {
+		Order order = orderDao.selectByPrimaryKey(orderNo);
+		if (order == null) {
+			return new Result(1, "订单不存在！");
+		}
+		if (order.getWechatUserId() != wechatUserId) {
+			return new Result(1, "用户错误！");
+		}
+		if (order.getStatus() == 1) {
+			return new Result(0, "支付成功！");
+		} else {
+			order.setStatus((short) 1);
+			if (orderDao.updateByPrimaryKeySelective(order) == 1) {
+				Corporation corporation = corporationDao.get();
+				corporation.setBalance(corporation.getBalance().add(order.getCorporationIncome()));
+				corporationDao.updateByPrimaryKeySelective(corporation);
+				
+				Business business = businessDao.selectByPrimaryKey(order.getBusinessId());
+				business.setBalance(business.getBalance().add(order.getBusinessIncome()));
+				businessDao.updateByPrimaryKeySelective(business);
+				
+				if (order.getAgencyId() != null) {
+					Agency agency = agencyDao.selectByPrimaryKey(order.getAgencyId());
+					agency.setBalance(agency.getBalance().add(order.getAgencyIncome()));
+					agencyDao.updateByPrimaryKeySelective(agency);
+				}
+				
+				return new Result(1, "支付成功！");
+			} else {
+				return new Result(0, "支付异常！");
+			}
+		}
+	}
+	
+	@Override
+	public Result ownScreenUsed(int businessId, int wechatUserId) {
+		BusinessWechatUser businessWechatUser = new BusinessWechatUser();
+		businessWechatUser.setBusinessId(businessId);
+		businessWechatUser.setWechatUserId(wechatUserId);
+		businessWechatUser = businessWechatUserDao.selectByBusinessId(businessWechatUser);
+		
+		if (businessWechatUser.getOwnScreenCount() > 0) {
+			businessWechatUser.setOwnScreenCount(businessWechatUser.getOwnScreenCount() - 1);
+			if (businessWechatUserDao.updateByPrimaryKeySelective(businessWechatUser) == 1) {
+				return new Result(0);	
+			} else {
+				return new Result(1, "程序出错！");	
+			}
+		} else {
+			return new Result(1, "免费次数已用完！");	
+		}
+	}
+
+	@Override
+	public Result setWeishangqiangOn(int weishangqiangId) {
+		Weishangqiang weishangqiang = weishangqiangDao.selectByPrimaryKey(weishangqiangId);
+		weishangqiang.setPause("1");
+		if (weishangqiangDao.updateByPrimaryKey(weishangqiang) == 1) {
+			return new Result(0);
+		} else {
+			return new Result(1);
+		}
+	}
+
+	@Override
+	public Result setWeishangqiangOff(int weishangqiangId) {
+		Weishangqiang weishangqiang = weishangqiangDao.selectByPrimaryKey(weishangqiangId);
+		weishangqiang.setPause("0");
+		if (weishangqiangDao.updateByPrimaryKey(weishangqiang) == 1) {
+			return new Result(0);
+		} else {
+			return new Result(1);
+		}
+	}
+
+}

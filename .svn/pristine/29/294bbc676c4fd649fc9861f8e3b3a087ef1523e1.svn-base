@@ -1,0 +1,75 @@
+package cn.xjwlfw.yeshenghuo.service.business.functionManage;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.model.WeiShQContentShow;
+import cn.xjwlfw.yeshenghuo.model.Weishangqiang;
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+
+public interface FunctionService {
+	
+	/**
+	 * 功能暂停
+	 * @param mobile
+	 * @param status
+	 * @author niurui
+	 * @since 2017年3月16日
+	 */
+	public void changeSetting(String mobile, Weishangqiang wei);
+	
+	/**
+	 * 开通微上墙
+	 * @param mobile
+	 * @author niurui
+	 * @since 2017年3月16日
+	 */
+	public void openWShQ(HttpServletRequest request, String mobile);
+	
+	/**
+	 * 查询微上墙全部信息
+	 * @param mobile
+	 * @return
+	 * @author niurui
+	 * @since 2017年3月18日
+	 */
+	public Map<String, Object> getHomeData(String mobile);
+	
+	/**
+	 * 打开大屏幕
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月29日
+	 */
+	public String openBigScreen(Model model, int businessId);
+	
+	/**
+	 * 获取大屏幕内容
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月30日
+	 */
+	public Result getContent(int businessId, String lastTime);
+	
+	/**
+	 * 获取聊天内容列表
+	 * @param businessId
+	 * @param lastTime
+	 * @return
+	 * @author niurui
+	 * @since 2017年4月11日
+	 */
+	public List<WeiShQContentShow> getContentList(String mobile);
+	
+	/**
+	 * 删除聊天内容
+	 * @param array
+	 * @author niurui
+	 * @since 2017年4月18日
+	 */
+	public void deleteContent(List<String> array);
+}

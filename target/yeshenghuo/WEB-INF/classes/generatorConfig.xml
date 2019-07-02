@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  
+  <classPathEntry location="E:\workspace\yeshenghuo\src\main\resources\mysql-connector-java-5.1.30.jar" />
+  
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+    
+    <commentGenerator>
+      <property name="suppressDate" value="true" />
+      <property name="suppressAllComments" value="true" />
+    </commentGenerator>
+    
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://123.206.68.86:3306/db_yeshenghuo" userId="root" password="mm15935020988" />
+    
+    <javaTypeResolver>
+      <property name="forceBigDecimals" value="true" />
+    </javaTypeResolver>
+    
+    <javaModelGenerator targetPackage="cn.xjwlfw.yeshenghuo.model" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </javaModelGenerator>
+    
+    <sqlMapGenerator targetPackage="cn.xjwlfw.yeshenghuo.mapper.xml" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+    
+    <javaClientGenerator targetPackage="cn.xjwlfw.yeshenghuo.mapper" type="XMLMAPPER" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+    
+    <table tableName="role" enableCountByExample="false" enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
+      <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+    </table>
+    
+  </context>
+  
+</generatorConfiguration>

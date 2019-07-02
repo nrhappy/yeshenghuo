@@ -1,0 +1,76 @@
+package cn.xjwlfw.yeshenghuo.service.business.functionManage;
+
+import java.util.Map;
+
+import cn.xjwlfw.yeshenghuo.model.WechatUser;
+/**
+ * 微信相关接口
+ * @author niurui
+ * @since 2017年4月2日
+ */
+public interface WechatService {
+
+	/**
+	 * 获取ACCESSTOKEN
+	 * @return
+	 * @author niurui
+	 * @since 2017年4月2日
+	 */
+	public String getAccessToken();
+	
+	/**
+	 * 创建二维码ticket，返回二维码链接
+	 * @param accessToken
+	 * @param scene_id
+	 * @return
+	 * @author niurui
+	 * @since 2017年4月2日
+	 */
+	public String createTicket(String accessToken, String scene_id);
+	
+	/**
+	 * 获取微信用户信息
+	 * @param openId
+	 * @return
+	 * @author niurui
+	 * @since 2017年4月2日
+	 */
+	public WechatUser getWechatUserInfo(String openId);
+	
+	/**
+	 * 保存微信用户信息
+	 * @param openId
+	 * @param subscribe
+	 * @author niurui
+	 * @since 2017年4月2日
+	 */
+	public void saveOrUpdateWechatUser(String openId, String subscribe, int businessId);
+	
+	/**
+	 * 第三方登陆
+	 * @param code
+	 * @return
+	 * @author niurui
+	 * @since 2017年4月2日
+	 */
+	public Map<String, String> codeChangeAccessToken (String code);
+	
+	/**
+	 * 不关注获取用户信息
+	 * @param accessToken
+	 * @param openId
+	 * @author niurui
+	 * @since 2017年4月2日
+	 */
+	public WechatUser getUserWithoutSubscribe (String accessToken, String openId, int businessId);
+	
+	/**
+	 * 通过openId获取用户信息
+	 * @param openId
+	 * @return
+	 * @author niurui
+	 * @since 2017年5月10日
+	 */
+	public WechatUser getWechatUserInfoByOpenId(String openId);
+	
+}

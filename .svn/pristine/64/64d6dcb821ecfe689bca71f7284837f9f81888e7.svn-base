@@ -1,0 +1,41 @@
+package cn.xjwlfw.yeshenghuo.service.corporation.agencyManage.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.mapper.AgencyMapper;
+import cn.xjwlfw.yeshenghuo.model.Agency;
+import cn.xjwlfw.yeshenghuo.model.AgencyResult;
+import cn.xjwlfw.yeshenghuo.service.corporation.agencyManage.AgencyInfoService;
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+
+@Service
+public class AgencyInfoServiceImpl implements AgencyInfoService {
+
+	@Autowired
+	private AgencyMapper agencyDao;
+	
+	@Override
+	public String index(Model model, String agencyName) {
+		Agency agency = new Agency();
+		agency.setName(agencyName);
+		List<Agency> agencyList = agencyDao.selectList(agency);
+		model.addAttribute("agencyList", agencyList);
+		return "/corporation/agencyManage/agencyInfo";
+	}
+
+	@Override
+	public Result updateNotes(int agencyId, String notes, Model model) {
+		Agency agency = agencyDao.selectByPrimaryKey(agencyId);
+		agency.setNotes(notes);
+		if (agencyDao.updateByPrimaryKeySelective(agency) == 1) {
+			return new Result(0, "备注修改成功！");
+		} else {
+			return new Result(1, "备注修改失败！");
+		}
+	}
+
+}

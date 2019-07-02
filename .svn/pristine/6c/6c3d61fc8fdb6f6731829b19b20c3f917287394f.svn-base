@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.WechatUserMapper">
+	<resultMap
+		id="BaseResultMap"
+		type="cn.xjwlfw.yeshenghuo.model.WechatUser">
+		<id
+			column="id"
+			jdbcType="INTEGER"
+			property="id" />
+		<result
+			column="nickname"
+			jdbcType="VARCHAR"
+			property="nickname" />
+		<result
+			column="profile"
+			jdbcType="VARCHAR"
+			property="profile" />
+		<result
+			column="openId"
+			jdbcType="VARCHAR"
+			property="openId" />
+		<result
+			column="sex"
+			jdbcType="TINYINT"
+			property="sex" />
+		<result
+			column="notes"
+			jdbcType="VARCHAR"
+			property="notes" />
+		<result
+			column="address"
+			jdbcType="VARCHAR"
+			property="address" />
+		<result
+			column="subscribe"
+			jdbcType="INTEGER"
+			property="subscribe" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, nickname, profile, openId, sex, notes, address, subscribe
+	</sql>
+	<select
+		id="selectByPrimaryKey"
+		parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from wechat_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete
+		id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from wechat_user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert
+		id="insert"
+		parameterType="cn.xjwlfw.yeshenghuo.model.WechatUser">
+		<selectKey
+			keyProperty="id"
+			order="AFTER"
+			resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into wechat_user (nickname, profile, openId, sex, notes,
+		address, subscribe)
+		values (#{nickname,jdbcType=VARCHAR}, #{profile,jdbcType=VARCHAR},
+		#{openId,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT},
+		#{notes,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+		#{subscribe,jdbcType=INTEGER})
+	</insert>
+	<insert
+		id="insertSelective"
+		parameterType="cn.xjwlfw.yeshenghuo.model.WechatUser">
+		<selectKey
+			keyProperty="id"
+			order="AFTER"
+			resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into wechat_user
+		<trim
+			prefix="("
+			suffix=")"
+			suffixOverrides=",">
+			<if test="nickname != null">
+				nickname,
+			</if>
+			<if test="profile != null">
+				profile,
+			</if>
+			<if test="openId != null">
+				openId,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="notes != null">
+				notes,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="subscribe != null">
+				subscribe,
+			</if>
+		</trim>
+		<trim
+			prefix="values ("
+			suffix=")"
+			suffixOverrides=",">
+			<if test="nickname != null">
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="profile != null">
+				#{profile,jdbcType=VARCHAR},
+			</if>
+			<if test="openId != null">
+				#{openId,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=TINYINT},
+			</if>
+			<if test="notes != null">
+				#{notes,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="subscribe != null">
+				#{subscribe,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</insert>
+	<update
+		id="updateByPrimaryKeySelective"
+		parameterType="cn.xjwlfw.yeshenghuo.model.WechatUser">
+		update wechat_user
+		<set>
+			<if test="nickname != null">
+				nickname = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="profile != null">
+				profile = #{profile,jdbcType=VARCHAR},
+			</if>
+			<if test="openId != null">
+				openId = #{openId,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null and sex != 100">
+				sex = #{sex,jdbcType=TINYINT},
+			</if>
+			<if test="notes != null">
+				notes = #{notes,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="subscribe != null">
+				subscribe = #{subscribe,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update
+		id="updateByPrimaryKey"
+		parameterType="cn.xjwlfw.yeshenghuo.model.WechatUser">
+		update wechat_user
+		set nickname = #{nickname,jdbcType=VARCHAR},
+		profile = #{profile,jdbcType=VARCHAR},
+		sex = #{sex,jdbcType=TINYINT},
+		notes = #{notes,jdbcType=VARCHAR},
+		address = #{address,jdbcType=VARCHAR},
+		subscribe = #{subscribe,jdbcType=INTEGER},
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select
+		id="selectByOpenId"
+		parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from wechat_user
+		where openId = #{openId,jdbcType=VARCHAR}
+	</select>
+	<update
+		id="updateByOpenId"
+		parameterType="cn.xjwlfw.yeshenghuo.model.WechatUser">
+		update wechat_user
+		<set>
+			<if test="nickname != null">
+				nickname = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="profile != null">
+				profile = #{profile,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=TINYINT},
+			</if>
+			<if test="notes != null">
+				notes = #{notes,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="subscribe != null">
+				subscribe = #{subscribe,jdbcType=INTEGER},
+			</if>
+		</set>
+		where openId = #{openId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectCurrentWechatUser" parameterType="java.util.Map" resultType="cn.xjwlfw.yeshenghuo.model.WechatUser">
+		select t2.id as "id",
+			t1.nickname as "nickname",
+			t1.profile as "profile",
+			t1.openId as "openId",
+			t1.sex as "sex",
+			t1.address as "address",
+			t2.notes as "notes",
+			t2.role as "role"
+		from wechat_user t1
+		left join business_wechat_user t2 on t1.id = t2.wechat_user_id
+		where t2.business_id = #{businessId,jdbcType=INTEGER}
+		<if test="name != null">
+		    and t1.nickname like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		</if>
+	</select>
+</mapper>

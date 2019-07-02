@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xjwlfw.yeshenghuo.mapper.CashOutMapper">
+  <resultMap id="BaseResultMap" type="cn.xjwlfw.yeshenghuo.model.CashOut">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <result column="business_id" jdbcType="INTEGER" property="businessId" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, agency_id, business_id, amount, status, create_time, update_time, notes
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cash_out
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectUndeliveryByBusinessId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cash_out
+    where business_id = #{businessId,jdbcType=INTEGER} and status = 0
+  </select>
+  <select id="selectUndeliveryByAgencyId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cash_out
+    where agency_id = #{agencyId,jdbcType=INTEGER} and status = 0
+  </select>
+  <select id="selectList" parameterType="cn.xjwlfw.yeshenghuo.model.CashOut" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cash_out
+    where 1=1
+    <if test="status != null">
+      and status = #{status,jdbcType=TINYINT}
+    </if>
+    <if test="businessId != null">
+      and business_id = #{businessId,jdbcType=INTEGER}
+    </if>
+    <if test="agencyId != null">
+      and agency_id = #{agencyId,jdbcType=INTEGER}
+    </if>
+    order by update_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cash_out
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.xjwlfw.yeshenghuo.model.CashOut">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cash_out (type, agency_id, business_id, 
+      amount, status, create_time, 
+      update_time, notes)
+    values (#{type,jdbcType=TINYINT}, #{agencyId,jdbcType=INTEGER}, #{businessId,jdbcType=INTEGER}, 
+      #{amount,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{notes,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xjwlfw.yeshenghuo.model.CashOut">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cash_out
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="type != null">
+        type,
+      </if>
+      <if test="agencyId != null">
+        agency_id,
+      </if>
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="notes != null">
+        notes,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="agencyId != null">
+        #{agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="businessId != null">
+        #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="notes != null">
+        #{notes,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xjwlfw.yeshenghuo.model.CashOut">
+    update cash_out
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="agencyId != null">
+        agency_id = #{agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="notes != null">
+        notes = #{notes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xjwlfw.yeshenghuo.model.CashOut">
+    update cash_out
+    set type = #{type,jdbcType=TINYINT},
+      agency_id = #{agencyId,jdbcType=INTEGER},
+      business_id = #{businessId,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      status = #{status,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      notes = #{notes,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

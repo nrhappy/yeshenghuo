@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Porject - 控制台</title>
+    <link href="resource/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/console.css" rel="stylesheet">
+    
+  </head>
+    
+  <body style="padding:15px;">
+    <h4>总览</h4>
+    <hr>
+    
+    
+	<script src="resource/jquery/js/jquery.js"></script>
+	<script src="resource/bootstrap/js/bootstrap.js"></script>
+  </body>
+</html>

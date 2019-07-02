@@ -1,0 +1,31 @@
+function payOrder(orderNo, wechatUserId) {
+	$.ajax({
+		url : root + "/customer/weishangqiang/payOrder",
+		type : "post",
+		cache : false,
+		data : {
+			orderNo : orderNo,
+			wechatUserId : wechatUserId
+		},
+		dataType : "json",
+		error : function() {
+			return false;
+		},
+		success : function(result) {
+			if (result.code == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	});
+}
+
+function selectOwnScreen(ownScreenId) {
+	$.each(ownScreenList, function(index, ownScreen) {
+		if (ownScreenId == ownScreen.id) {
+			ownScreenSelected = ownScreen;
+			$("#bapin-buy-total").text(ownScreen.price);
+		}
+	});
+}

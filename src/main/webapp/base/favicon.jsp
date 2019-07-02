@@ -1,0 +1,1 @@
+<link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/resource/img/index_logo.png" />

@@ -1,0 +1,15 @@
+package cn.xjwlfw.yeshenghuo.service.corporation.businessManage;
+
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+
+public interface BusinessInfoService {
+	
+	public String index(Model model);
+
+	public String search(String businessName, Model model);
+	
+	public Result updateNotes(int businessId, String notes, Model model);
+
+}

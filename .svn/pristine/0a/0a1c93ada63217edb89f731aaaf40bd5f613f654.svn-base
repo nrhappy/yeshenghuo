@@ -1,0 +1,109 @@
+body {
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+/** topbar ( start ) **/
+
+.topbar {
+  position:absolute;
+  top:0px;
+  bottom:0px;
+  left:0px;
+  width:100%;
+  min-width:768px;
+  height:50px;
+  border-radius:0px; 
+  border-bottom:3px solid #337ab7;
+}
+
+.topbar ul {
+  float:left;
+}
+
+.topbar .pull-left li {
+  width:75px;
+  text-align:center;
+  border-right:1px solid #ddd;
+  float:right;	
+  margin:15px 0px;
+  padding:0px 5px;
+  list-style-type:none;
+}
+
+.topbar .pull-left li:first-child {
+  border-right:0px solid #ccc;
+}
+
+.topbar .pull-right li {
+  float:right;	
+  margin:17px 10px;
+  list-style-type:none;
+}
+
+.topbar ul li a {
+  text-decoration:none;
+}
+
+/** topbar ( end ) **/
+
+/** sidebar ( start ) **/
+
+.sidebar {
+  position:absolute;
+  top:50px;
+  bottom:0px;
+  left:0px;
+  width:180px;
+  border-right:3px solid #337ab7;
+}
+
+.sidebar .panel-group {
+  margin:0px;
+}
+
+.sidebar .panel-group .panel{
+  margin:3px;
+}
+
+.sidebar .panel-group .no-shadow {
+  box-shadow:0 0 0;
+}
+
+.sidebar .panel-group .panel .panel-heading {
+  padding:8px;
+}
+
+.sidebar .panel-group .panel .panel-heading .panel-title a {
+  text-decoration:none;
+}
+
+.sidebar .panel-group .panel .panel-body {
+  padding:3px;
+}
+
+.sidebar .panel-group .panel .panel-body li a {
+  padding:5px 10px;
+}
+
+/** sidebar ( end ) **/
+
+/** workspace ( start ) **/
+
+.workspace {
+  position:absolute; 
+  top:50px; 
+  left:180px; 
+  right:0px; 
+  padding:3px;
+  bottom:0px;
+}
+
+.workspace iframe {
+  width:100%; 
+  height:100%; 
+  border-width:0px;
+}
+
+/** workspace ( end ) **/

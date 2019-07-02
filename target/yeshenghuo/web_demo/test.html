@@ -1,0 +1,511 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Bootstrap 101 Template</title>
+    <link href="resource/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<style>
+	  .bgred { background-color:#F00; }
+	  .bgfray { background-color:#666 }
+    </style>
+  </head>
+    
+  <body>
+
+      <div class="nav navbar-default" style=" border-radius:0px; border-bottom:3px solid #337ab7" role="navigation">
+        
+        <div class="navbar-header">
+          <button class="navbar-toggle" data-toggle="collapse" data-target="#bs-example">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Brand</a>
+        </div>
+        
+        <div class="collapse navbar-collapse" id="bs-example">
+          
+          <ul class="nav navbar-nav">
+            <li><a href="#">link</a></li>
+            <li><a href="#">link</a></li>
+            <li><a href="#">link</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">dropdownlist</a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+          
+          <form class="navbar-form navbar-right" role="search">
+        <div class="input-group">
+          <input class="form-control" type="text" placeholder="Search">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">Search</button>
+          </span>
+        </div>
+          </form>
+          
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" data-toggle="modal" data-target="#login-register-modal">登录 / 注册</a></li>
+          </ul>
+          
+        </div>
+        
+      </div>
+
+        <div id="myCarousel" class="carousel slide" style="min-width:1170px; height:400px; overflow:hidden;">
+          <!-- 轮播（Carousel）指标 -->
+          <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+          </ol>
+          <!-- 轮播（Carousel）项目 -->
+          <div class="carousel-inner">
+            <div class="item active">
+              <a href="#"><img src="resource/img/20150811140941936.png" width="100%" height="auto" alt="First slide"></a>
+            </div>
+            <div class="item">
+              <a href="#"><img src="resource/img/20151124095459050.png" width="100%" height="auto" alt="First slide"></a>
+            </div>
+            <div class="item">
+              <a href="#"><img src="resource/img/20151201172805968.png" width="100%" height="auto" alt="First slide"></a>
+            </div>
+          </div>
+          <!-- 轮播（Carousel）导航 -->
+          <a class="carousel-control left" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+          <a class="carousel-control right" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+        </div>
+
+      <div class="row">
+        <div class="col-xs-2" style="border:1px solid #ccc; height:300px; overflow:auto;">
+          
+          <div class="panel-group" id="accordion">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#item1">item1</a>
+                </h4>
+              </div>     
+              <div class="panel-collapse collapse" id="item1">
+                <div class="panel-body">
+                  <div class="nav nav-pills nav-stacked">
+                    <li><a href="#">item1-1</a></li>
+                    <li><a href="#">item1-2</a></li>
+                    <li><a href="#">item1-3</a></li>
+                    <li><a href="#">item1-4</a></li>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#item2">item2</a>
+                </h4>
+              </div>
+              <div class="panel-collapse collapse" id="item2">
+                <div class="panel-body">
+                  <div class="nav nav-pills nav-stacked">
+                    <li><a href="#">item2-1</a></li>
+                    <li><a href="#">item2-2</a></li>
+                    <li><a href="#">item2-3</a></li>
+                    <li><a href="#">item2-4</a></li>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#item3">item3</a>
+                </h4>
+              </div>
+              <div class="panel-collapse collapse" id="item3">
+                <div class="panel-body">
+                  <div class="nav nav-pills nav-stacked">
+                    <li><a href="#">item3-1</a></li>
+                    <li><a href="#">item3-2</a></li>
+                    <li><a href="#">item3-3</a></li>
+                    <li><a href="#">item3-4</a></li>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+
+    <div class="container" style="min-width:1170px;">
+      
+      <!--<div class="row">
+        <div class="bgred col-xs-2">test</div>
+        <div class="bgfray col-xs-2">test</div>
+        <div class="bgred col-xs-4">test</div>
+        <div class="bgfray col-xs-4">test</div>
+      </div>-->
+      
+      <div class="row">
+<div class="accordion" id="accordion2">
+	
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">Collapsible Group Item #1</a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+        	<div class="accordion-inner">Anim pariatur cliche...</div>
+        </div>
+    </div>
+    
+    
+    <div class="accordion-group">
+    	<div class="accordion-heading">
+    		<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">Collapsible Group Item #2</a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+        	<div class="accordion-inner">Anim pariatur cliche...</div>
+        </div>
+    </div>
+    
+</div>
+      </div>
+            
+      <div class="row">
+<div class="alert alert-success alert-dismissable fade in" id="alert-success">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	<p>alert-success test !!</p>
+	<p>
+      <button class="btn btn-success btn-sm" type="button">Close</button>
+    </p>
+</div>
+<div class="alert alert-warning alert-dismissable fade in" id="alert-warning">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	<p>alert-warning test !!</p>
+</div>
+<div class="alert alert-info alert-dismissable fade in" id="alert-info">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	<p>alert-success info !!</p>
+</div>
+<div class="alert alert-danger alert-dismissable fade in" id="alert-danger">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	<p>alert-danger test !!</p>
+</div>
+      </div>
+      
+      
+      
+
+      
+      <div class="row">
+        <h3>Favorite Outdoor Activities</h3>
+        <ul>
+          <li>Backpacking in Yosemite</li>
+          <li>Hiking in Arches
+            <ul>
+              <li>Delicate Arch
+                <ul>
+                  <li>1</li>
+                  <li>1</li>
+                  <li>1</li>
+                  <li>1</li>
+                </ul>
+              </li>
+              <li>Park Avenue</li>
+            </ul>
+          </li>
+          <li>Biking the Flintstones Trail</li>
+        </ul>
+      </div>
+      
+      <div class="row">
+        <h3>Common Electronics Parts</h3>
+        <dl>
+          <dt>LED</dt>
+          <dd>A light-emitting diode (LED) is a semiconductor light source.</dd>
+          <dt>Servo</dt>
+          <dd>Servos are small, cheap, mass-produced actuators used for radio control and small robotics.</dd>
+        </dl>
+      </div>
+      
+      <div class="row">
+        <p>Instead of always using divs, in HTML5, you can use new elements like
+        <code>&lt;section&gt;</code>, <code>&lt;header&gt;</code>, and
+        <code>&lt;footer&gt;</code>. The html should look something like this:</p>
+        <pre>&lt;article&gt;&lt;h1&gt;Article Heading&lt;/h1&gt;&lt;/article&gt;</pre>
+      </div>
+      
+      <div class="row">
+        <table class="table table-hover">
+          <caption>Caption</caption>
+          <thead>
+            <tr>
+              <th>th</th>
+              <th>th</th>
+              <th>th</th>
+              <th>th</th>
+              <th>th</th>
+              <th>th</th>
+              <th>th</th>
+              <th>th</th>
+              <th>th</th>
+              <th>th</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+            </tr>
+            <tr>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+            </tr>
+            <tr>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+            </tr>
+            <tr>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+            </tr>
+            <tr>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+              <td>td</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="row">
+      <div class="btn-group">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+          dropdown-button
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="#">test</a></li>
+          <li><a href="#">test</a></li>
+          <li><a href="#">test</a></li>
+          <li class="divider"></li>
+          <li><a href="#">test</a></li>
+        </ul>
+      </div>
+      </div>
+      
+      <div class="row">
+        <button class="btn btn-default">default</button>
+        <button class="btn btn-primary">primary</button>
+        <button class="btn btn-info">info</button>
+        <button class="btn btn-success">success</button>
+        <button class="btn btn-warning">warning</button>
+        <button class="btn btn-danger">danger</button>
+      </div>
+      
+      <div class="row">
+      <ul class="nav nav-pills">
+        <li><a href="#">item</a></li>
+        <li><a href="#">item</a></li>
+        <li><a href="#">item</a></li>
+      </ul>
+      </div>
+      
+      <div class="row">
+      <div class="nav navbar-default" style="border-top:3px solid #337ab7; border-radius:0px; background-color:#fff;" role="navigation">
+          
+          <ul class="nav navbar-nav">
+            <li><a href="#" style="padding-left:0px; padding-right:0px;">Copyright © 2017 - 2020 leeeeeee.net</a></li>
+          </ul>
+          
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">更新日志</a></li>
+            <li><a>/</a></li>
+            <li><a href="#">意见反馈</a></li>
+            <li><a>/</a></li>
+            <li><a href="#">帮助</a></li>
+          </ul>
+        
+      </div>
+      </div>
+      
+    </div>
+    
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal" type="button">&times;</button>
+            <h4 class="modal-title" id="modal-title">modal title</h4>
+          </div>
+          <div class="modal-body">
+            modal body
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            <button class="btn btn-primary" type="button">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" id="login-register-modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <ul class="nav nav-tabs">
+              <li class="active">
+                <a data-toggle="tab" href="#login">登录</a>
+              </li>
+              <li>
+                <a data-toggle="tab" href="#register">注册</a>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane fade in active" id="login">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+        
+        </div>
+        <div class="form-group">
+          <label class="col-xs-2 control-label" for="email">用户名</label>
+          <div class="col-xs-8">
+            <input class="form-control" id="email" type="email" placeholder="Enter email">
+          </div>
+          <label class="control-label text-danger text-muted">*</label>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-2 control-label" for="password">密码</label>
+          <div class="col-xs-8">
+            <input class="form-control" id="password" type="password" placeholder="Enter password">
+          </div>
+          <label class="control-label text-danger text-muted">*</label>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-offset-2 col-xs-8">
+            <div class="checkbox">
+              <label><input type="checkbox">记住我</label></label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-offset-2 col-xs-8">
+            <button class="btn btn-success" type="submit">登录</button>
+            <button class="btn btn-default" data-dismiss="modal" type="button">返回</button>
+          </div>
+        </div>
+      </form>
+              </div>
+              <div class="tab-pane fade" id="register">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+        
+        </div>
+        <div class="form-group">
+          <label class="col-xs-2 control-label" for="email">用户名</label>
+          <div class="col-xs-8">
+            <input class="form-control" id="email" type="email" placeholder="Enter email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-2 control-label" for="password">密码</label>
+          <div class="col-xs-8">
+            <input class="form-control" id="password" type="password" placeholder="Enter password">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-2 control-label" for="password">密码</label>
+          <div class="col-xs-8">
+            <input class="form-control" id="password" type="password" placeholder="Enter password">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-2 control-label" for="password">密码</label>
+          <div class="col-xs-8">
+            <input class="form-control" id="password" type="password" placeholder="Enter password">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-2 control-label" for="password">密码</label>
+          <div class="col-xs-8">
+            <input class="form-control" id="password" type="password" placeholder="Enter password">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-offset-2 col-xs-8">
+            <div class="checkbox">
+              <label><input type="checkbox">记住我</label></label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-offset-2 col-xs-8">
+            <button class="btn btn-success" type="submit" data-loading-text="loading...">注册</button>
+            <button class="btn btn-default" data-dismiss="modal" type="button">返回</button>
+          </div>
+        </div>
+      </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+    
+    
+    
+	<script src="resource/jquery/js/jquery.js"></script>
+	<script src="resource/bootstrap/js/bootstrap.js"></script>
+  </body>
+</html>

@@ -1,0 +1,106 @@
+package cn.xjwlfw.yeshenghuo.controller.business.functionManage;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.DigestException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.xjwlfw.yeshenghuo.service.business.functionManage.WechatService;
+import cn.xjwlfw.yeshenghuo.system.util.Sha1Util;
+
+@Controller
+public class WechatController {
+
+	Logger logger = Logger.getLogger(WechatController.class);
+
+	@Autowired
+	private WechatService wechatService;
+	
+	private static String TOKEN = "weixin";
+
+	@ResponseBody
+	@RequestMapping(value = "/testWeiXin.do")
+	public String aaa(HttpServletRequest request) {
+		return "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getReturnValue.do")
+	public String getReturnValue(HttpServletRequest request) {
+		String signature = request.getParameter("signature");
+		String timestamp = request.getParameter("timestamp");
+		String nonce = request.getParameter("nonce");
+		Map<String, Object> maps = new HashMap<>();
+		maps.put(timestamp, timestamp);
+		maps.put(nonce, nonce);
+		maps.put(TOKEN, TOKEN);
+		String secreat = "";
+		try {
+			secreat = Sha1Util.SHA1(maps);
+		} catch (DigestException e) {
+			logger.error(e.getMessage(), e);
+		}
+		if (!secreat.equals(signature.toUpperCase())) {
+			return "";
+		}
+
+		try {
+			setUserInfo(request.getInputStream());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return request.getParameter("echostr");
+	}
+
+	private void setUserInfo(ServletInputStream inputStream) throws Exception {
+		SAXReader saxReader = null;
+		Document doc = null;
+
+		saxReader = new SAXReader();
+		doc = saxReader.read(inputStream);
+		logger.info(doc.asXML());
+
+		if (doc == null || doc.asXML().trim().isEmpty()) {
+			return;
+		}
+		Element root = doc.getRootElement();
+		Map<String, String> subscribeMap = new HashMap<>();
+		for (Iterator i = root.elementIterator(); i.hasNext();) {
+			Element node = (Element) i.next();
+			subscribeMap.put(node.getName(), node.getText());
+		}
+		wechatService.saveOrUpdateWechatUser(subscribeMap.get("FromUserName"), subscribeMap.get("Event"));
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getEventPush.do")
+	public String getEventPush(HttpServletRequest request) {
+		try {
+			InputStream inputStream = request.getInputStream();
+			SAXReader reader = new SAXReader();
+			Document document = reader.read(inputStream);
+			Element root = document.getRootElement();
+			logger.info("root" + root.getText());
+			return root.getText();
+		} catch (IOException | DocumentException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return "";
+	}
+}

@@ -1,0 +1,91 @@
+package cn.xjwlfw.yeshenghuo.service.agency.financeManage.impl;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.mapper.AgencyMapper;
+import cn.xjwlfw.yeshenghuo.mapper.CashOutMapper;
+import cn.xjwlfw.yeshenghuo.mapper.UserAgencyMapper;
+import cn.xjwlfw.yeshenghuo.mapper.UserMapper;
+import cn.xjwlfw.yeshenghuo.model.Agency;
+import cn.xjwlfw.yeshenghuo.model.Business;
+import cn.xjwlfw.yeshenghuo.model.CashOut;
+import cn.xjwlfw.yeshenghuo.model.User;
+import cn.xjwlfw.yeshenghuo.model.UserAgency;
+import cn.xjwlfw.yeshenghuo.model.UserBusiness;
+import cn.xjwlfw.yeshenghuo.service.agency.financeManage.AgencyCashOutService;
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+
+@Service
+public class AgencyCashOutServiceImpl implements AgencyCashOutService {
+
+	@Autowired
+	private UserMapper userDao;
+	
+	@Autowired
+	private AgencyMapper agencyDao;
+	
+	@Autowired
+	private UserAgencyMapper userAgencyDao;
+	
+	@Autowired
+	private CashOutMapper cashOutDao;
+	
+	@Override
+	public String index(Model model) {
+		String mobile = (String) SecurityUtils.getSubject().getPrincipal();
+		// 获取当前用户对象
+		User currentUser = userDao.selectByMobile(mobile);
+		// 获取当前用户代理关系对象
+		UserAgency userAgency = userAgencyDao.selectByUserId(currentUser.getId());
+		// 获取当前代理对象
+		Agency currentAgency = agencyDao.selectByPrimaryKey(userAgency.getAgencyId());
+		
+		CashOut oCashOut = cashOutDao.selectUndeliveryByAgencyId(currentAgency.getId());
+		
+		model.addAttribute("oCashOut", oCashOut);
+		model.addAttribute("currentAgency", currentAgency);
+		
+		return "/agency/financeManage/agencyCashOut";
+	}
+	
+	@Override
+	public Result cashOut(BigDecimal amount) {
+		String mobile = (String) SecurityUtils.getSubject().getPrincipal();
+		// 获取当前用户对象
+		User currentUser = userDao.selectByMobile(mobile);
+		// 获取当前用户代理关系对象
+		UserAgency userAgency = userAgencyDao.selectByUserId(currentUser.getId());
+		// 获取当前代理对象
+		Agency currentAgency = agencyDao.selectByPrimaryKey(userAgency.getAgencyId());
+		
+		CashOut oCashOut = cashOutDao.selectUndeliveryByAgencyId(currentAgency.getId());
+		
+		if (oCashOut != null) {
+			return new Result(1, "已经有待初受理的提现请求了，无法再次申请！");
+		}
+		
+		if (currentAgency.getBalance().compareTo(amount) != -1) {
+			CashOut cashOut = new CashOut();
+			cashOut.setType((byte) 1);
+			cashOut.setAgencyId(currentAgency.getId());
+			cashOut.setAmount(amount);
+			cashOut.setStatus((byte) 0);
+			cashOut.setCreateTime(new Date());
+			cashOut.setUpdateTime(new Date());
+			if (cashOutDao.insertSelective(cashOut) == 1) {
+				return new Result(0);
+			} else {
+				return new Result(1, "申请失败！");
+			}
+		} else {
+			return new Result(1, "当前余额不足！");
+		}
+	}
+
+}

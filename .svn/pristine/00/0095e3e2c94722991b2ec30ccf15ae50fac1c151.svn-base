@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Porject - 控制台</title>
+    <link href="resource/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/console.css" rel="stylesheet">
+    
+  </head>
+    
+  <body style="padding:0px 20px; overflow:auto;">
+    <h3>总览</h3>
+    <hr>
+    <div class="row">
+    
+    
+    <div class="col-xs-3">
+      <div class="  panel panel-warning">
+        <div class=" panel-heading"><span class="glyphicon glyphicon-time small"></span>&nbsp;待办事项-11<a class="pull-right text-muted"  style=" text-decoration:none;" href="javascript:;"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;更多</a>
+        </div>
+        <div class="panel-body">
+          <ul style=" border:1px solid #fff; padding:0px 20px; overflow:hidden; list-style-type: square">
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-xs-3">
+      <div class="  panel panel-warning">
+        <div class=" panel-heading"><span class="glyphicon glyphicon-time small"></span>&nbsp;待办事项1-2<a class="pull-right text-muted"  style=" text-decoration:none;" href="javascript:;"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;更多</a>
+        </div>
+        <div class="panel-body">
+          <ul style=" border:1px solid #fff; padding:0px 20px; overflow:hidden; list-style-type: square">
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-warning" href="javascript:;">item1item1item1item1item1</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="col-xs-6">
+      <div class="  panel panel-info">
+        <div class=" panel-heading"><span class="glyphicon glyphicon-time small"></span>&nbsp;待办事项2<a class="pull-right text-muted"  style=" text-decoration:none;" href="javascript:;"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;更多</a>
+        </div>
+        <div class="panel-body">
+          <ul style=" border:1px solid #fff; padding:0px 20px; overflow:hidden; list-style-type: square">
+            <li><a class="text-info" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-info" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-info" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-info" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-info" href="javascript:;">item1item1item1item1item1</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    </div>
+    
+    <div class="row">
+    
+    
+    <div class="col-xs-6">
+      <div class="  panel panel-danger">
+        <div class=" panel-heading"><span class="glyphicon glyphicon-time small"></span>&nbsp;待办事项3<a class="pull-right text-muted"  style=" text-decoration:none;" href="javascript:;"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;更多</a>
+        </div>
+        <div class="panel-body">
+          <ul style=" border:1px solid #fff; padding:0px 20px; overflow:hidden; list-style-type: square">
+            <li><a class="text-danger" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-danger" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-danger" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-danger" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-danger" href="javascript:;">item1item1item1item1item1</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="col-xs-6">
+      <div class="  panel panel-success">
+        <div class=" panel-heading"><span class="glyphicon glyphicon-time small"></span>&nbsp;待办事项4<a class="pull-right text-muted"  style=" text-decoration:none;" href="javascript:;"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;更多</a>
+        </div>
+        <div class="panel-body">
+          <ul style=" border:1px solid #fff; padding:0px 20px; overflow:hidden; list-style-type: square">
+            <li><a class="text-success" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-success" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-success" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-success" href="javascript:;">item1item1item1item1item1</a></li>
+            <li><a class="text-success" href="javascript:;">item1item1item1item1item1</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    </div>
+      
+    
+	<script src="resource/jquery/js/jquery.js"></script>
+	<script src="resource/bootstrap/js/bootstrap.js"></script>
+    <script src="js/base.js"></script>
+    <script src="js/console.js"></script>
+  </body>
+</html>

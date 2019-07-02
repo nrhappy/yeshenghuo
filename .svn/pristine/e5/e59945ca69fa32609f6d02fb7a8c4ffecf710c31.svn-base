@@ -1,0 +1,18 @@
+package cn.xjwlfw.yeshenghuo.service.business;
+
+import org.springframework.ui.Model;
+
+/**
+ * 商家管理
+ */
+public interface BusinessManageService {
+	
+	/**
+	 * 商家管理页面
+	 * 
+	 * @author liyijun
+	 * @since 2017年3月15日
+	 */
+	public String toManage(Model model);
+
+}

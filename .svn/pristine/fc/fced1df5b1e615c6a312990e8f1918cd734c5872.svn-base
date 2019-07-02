@@ -1,0 +1,225 @@
+package cn.xjwlfw.yeshenghuo.service.business.functionManage.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import cn.xjwlfw.yeshenghuo.controller.business.functionManage.WeishangqiangManageController;
+import cn.xjwlfw.yeshenghuo.mapper.BusinessMapper;
+import cn.xjwlfw.yeshenghuo.mapper.BusinessWeishangqiangMapper;
+import cn.xjwlfw.yeshenghuo.mapper.OwnScreenMapper;
+import cn.xjwlfw.yeshenghuo.mapper.WechatUserMapper;
+import cn.xjwlfw.yeshenghuo.mapper.WeishangqiangContentMapper;
+import cn.xjwlfw.yeshenghuo.mapper.WeishangqiangMapper;
+import cn.xjwlfw.yeshenghuo.model.Business;
+import cn.xjwlfw.yeshenghuo.model.BusinessWeishangqiang;
+import cn.xjwlfw.yeshenghuo.model.WeiShQContentShow;
+import cn.xjwlfw.yeshenghuo.model.Weishangqiang;
+import cn.xjwlfw.yeshenghuo.model.WeishangqiangContent;
+import cn.xjwlfw.yeshenghuo.model.WeishangqiangContentResult;
+import cn.xjwlfw.yeshenghuo.service.business.GetLoginInfoService;
+import cn.xjwlfw.yeshenghuo.service.business.functionManage.FunctionService;
+import cn.xjwlfw.yeshenghuo.service.business.functionManage.WechatService;
+import cn.xjwlfw.yeshenghuo.system.base.Result;
+import cn.xjwlfw.yeshenghuo.system.util.DateUtil;
+import cn.xjwlfw.yeshenghuo.system.util.QrcodeUtil;
+
+@Service
+public class FunctionServiceImpl implements FunctionService {
+	
+	Logger logger = Logger.getLogger(WeishangqiangManageController.class);
+	
+	private static String qrcodeUrl = "http://ycx.xiaovip.com.cn/weixin.html?businessId=";
+	
+	private static String qrcodeSave = "resource/qrcode/";
+	
+	private static String DEF_BG_URL = "resource/img/default_wsq_bg.jpg";
+	
+	private static String DEF_ACCESS_ACOUNT = "0";
+	
+	private static String DEF_FONT_SIZE = "2";
+
+	@Autowired
+	private BusinessWeishangqiangMapper businessWeishangqiangMapper;
+	
+	@Autowired
+	private WeishangqiangMapper weishangqiangMapper;
+	
+	@Autowired
+	private GetLoginInfoService getLoginInfoService;
+
+	@Autowired
+	private BusinessMapper businessDao;
+	
+	@Autowired
+	private WechatUserMapper wechatUserDao;
+	
+	@Autowired
+	private WechatService wechatService;
+	
+	@Autowired
+	private WeishangqiangContentMapper weishangqiangContentDao;
+	
+	@Autowired
+	private OwnScreenMapper ownScreenDao;
+	
+	@Override
+	public void changeSetting(String mobile, Weishangqiang wei) {
+		Business currentBusiness = getLoginInfoService.getBusinessByMobile(mobile);
+		BusinessWeishangqiang relation = businessWeishangqiangMapper.selectByBusinessId(currentBusiness.getId());
+		wei.setId(relation.getWeishangqiangId());
+		weishangqiangMapper.updateByPrimaryKeySelective(wei);
+	}
+
+	@Override
+	public void openWShQ(HttpServletRequest request, String mobile) {
+		Business currentBusiness = getLoginInfoService.getBusinessByMobile(mobile);
+		int businessId = currentBusiness.getId();
+		Weishangqiang wei = new Weishangqiang();
+		wei.setPause("0");
+		wei.setTitle(currentBusiness.getName());
+		wei.setLocation(currentBusiness.getAddrress());
+		wei.setBigScreenUrl("/business/functionManage/weishangqiangManage/bigScreen?businessId=" + currentBusiness.getId());
+		wei.setBgUrl(DEF_BG_URL);
+		wei.setAccessAccount(DEF_ACCESS_ACOUNT);
+		wei.setFontSize(DEF_FONT_SIZE);
+		String path = qrcodeSave + businessId + "_1" + ".JPG";
+		String filePath = request.getSession().getServletContext().getRealPath(path);
+		if (QrcodeUtil.encode(qrcodeUrl + currentBusiness.getId(), filePath)) {
+			wei.setQrcode(path);
+		}
+//		wei.setQrcode(this.getQrcodeUrl(currentBusiness.getId() + "", "1"));
+		
+		weishangqiangMapper.insertSelective(wei);
+		BusinessWeishangqiang bw = new BusinessWeishangqiang();
+		bw.setBusinessId(currentBusiness.getId());
+		bw.setWeishangqiangId(wei.getId());
+		businessWeishangqiangMapper.insertSelective(bw);
+	}
+
+	@Override
+	public Map<String, Object> getHomeData(String mobile) {
+		Map<String, Object> map = new HashMap<>();
+		Business currentBusiness = getLoginInfoService.getBusinessByMobile(mobile);
+		BusinessWeishangqiang relation = businessWeishangqiangMapper.selectByBusinessId(currentBusiness.getId());
+		if (relation == null) {
+			map.put("opened", "0");
+		} else {
+			map.put("opened", "1");
+			Weishangqiang wei = weishangqiangMapper.selectByPrimaryKey(relation.getWeishangqiangId());
+			map.put("info", wei);
+		}
+		return map;
+	}
+
+	@Override
+	public String openBigScreen(Model model, int businessId) {		
+		Business currentBusiness = businessDao.selectByPrimaryKey(businessId);
+		Weishangqiang currentWeishangqiang = weishangqiangMapper.selectByPrimaryKey(businessWeishangqiangMapper.selectByBusinessId(currentBusiness.getId()).getWeishangqiangId());
+		
+		List<WeishangqiangContent> currentWeishangqiangContentList = weishangqiangContentDao.selectByWeishangqiangIdInOrderCreateTimeDesc(currentWeishangqiang.getId());
+		List<WeishangqiangContentResult> currentWeishangqiangContentResultList = new ArrayList<WeishangqiangContentResult>();
+		
+		for (WeishangqiangContent weishangqiangContent : currentWeishangqiangContentList) {
+			WeishangqiangContentResult weishangqiangContentResult = new WeishangqiangContentResult();
+			weishangqiangContentResult.setId(weishangqiangContent.getId());
+			weishangqiangContentResult.setWechatUser(wechatUserDao.selectByPrimaryKey(weishangqiangContent.getWechatUserId()));
+			weishangqiangContentResult.setWeishangqiangId(weishangqiangContent.getWeishangqiangId());
+			weishangqiangContentResult.setType(weishangqiangContent.getType());
+			if (weishangqiangContent.getType() == 1) {
+				weishangqiangContentResult.setOwnScreen(ownScreenDao.selectByPrimaryKey(weishangqiangContent.getOwnScreenId()));
+				weishangqiangContentResult.setImgUrl(weishangqiangContent.getImgUrl());
+			} else if (weishangqiangContent.getType() == 2) {
+				
+			}
+			weishangqiangContentResult.setContent(weishangqiangContent.getContent());
+			weishangqiangContentResult.setCreateTime(new SimpleDateFormat("MM-dd HH:mm").format(weishangqiangContent.getCreateTime()));
+			
+			currentWeishangqiangContentResultList.add(weishangqiangContentResult);
+		}
+
+		model.addAttribute("timestamp", DateUtil.getCurrentTime());
+		model.addAttribute("currentBusiness", currentBusiness);
+		model.addAttribute("currentWeishangqiang", currentWeishangqiang);
+		model.addAttribute("currentWeishangqiangContentResultList", currentWeishangqiangContentResultList);
+		return "/business/functionManage/weishangqiangManage/bigScreen";
+	}
+
+	@Override
+	public Result getContent(int businessId, String lastTime) {
+		Business currentBusiness = businessDao.selectByPrimaryKey(businessId);
+		Weishangqiang currentWeishangqiang = weishangqiangMapper.selectByPrimaryKey(businessWeishangqiangMapper.selectByBusinessId(currentBusiness.getId()).getWeishangqiangId());
+		
+		List<WeishangqiangContent> currentWeishangqiangContentList = weishangqiangContentDao.selectByWeishangqiangIdlastTimeInOrderCreateTimeAsc(currentWeishangqiang.getId(), lastTime);
+		List<WeishangqiangContentResult> currentWeishangqiangContentResultList = new ArrayList<WeishangqiangContentResult>();
+		
+		for (WeishangqiangContent weishangqiangContent : currentWeishangqiangContentList) {
+			WeishangqiangContentResult weishangqiangContentResult = new WeishangqiangContentResult();
+			weishangqiangContentResult.setId(weishangqiangContent.getId());
+			weishangqiangContentResult.setWechatUser(wechatUserDao.selectByPrimaryKey(weishangqiangContent.getWechatUserId()));
+			weishangqiangContentResult.setWeishangqiangId(weishangqiangContent.getWeishangqiangId());
+			weishangqiangContentResult.setType(weishangqiangContent.getType());
+			if (weishangqiangContent.getType() == 1) {
+				weishangqiangContentResult.setOwnScreen(ownScreenDao.selectByPrimaryKey(weishangqiangContent.getOwnScreenId()));
+				weishangqiangContentResult.setImgUrl(weishangqiangContent.getImgUrl());
+			} else if (weishangqiangContent.getType() == 2) {
+				
+			}
+			weishangqiangContentResult.setContent(weishangqiangContent.getContent());
+			weishangqiangContentResult.setCreateTime(new SimpleDateFormat("MM-dd HH:mm").format(weishangqiangContent.getCreateTime()));
+			
+			currentWeishangqiangContentResultList.add(weishangqiangContentResult);
+		}
+
+		Result result = new Result();
+		Map<String, Object> data = new HashMap<String, Object>();
+		
+		data.put("currentWeishangqiang", currentWeishangqiang);
+		data.put("currentWeishangqiangContentResultList", currentWeishangqiangContentResultList);
+		result.setCode(0);
+		result.setData(data);
+		result.setMessage("数据获取成功！");
+		result.setTimestamp(DateUtil.getCurrentTime());
+		
+		return result;
+	}
+	
+	private String getQrcodeUrl(String businessId, String type) {
+		String accessToken = wechatService.getAccessToken();
+		String scene_id = type + businessId;
+		String ticket = wechatService.createTicket(accessToken, scene_id);
+		return "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket;
+	}
+
+	private String getPic(HttpServletRequest request, String bussinessId) {
+		String path = qrcodeSave + bussinessId + "_1" + ".JPG";
+		String filePath = request.getSession().getServletContext().getRealPath(path);
+		QrcodeUtil.encode(qrcodeUrl + bussinessId, filePath);
+		return path;
+	}
+
+	@Override
+	public List<WeiShQContentShow> getContentList(String mobile) {
+		Business currentBusiness = getLoginInfoService.getBusinessByMobile(mobile);
+		BusinessWeishangqiang relation = businessWeishangqiangMapper.selectByBusinessId(currentBusiness.getId());
+		return weishangqiangContentDao.getContentListByWeishangqiangId(relation.getWeishangqiangId());
+	}
+
+	@Override
+	public void deleteContent(List<String> array) {
+		for (String idStr : array) {
+			int id = Integer.parseInt(idStr);
+			weishangqiangContentDao.deleteByPrimaryKey(id);
+		}
+	}
+
+}
