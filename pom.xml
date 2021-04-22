@@ -9,7 +9,7 @@
   
   <properties>
     <spring.version>4.2.0.RELEASE</spring.version>
-    <mybatis.version>3.2.2</mybatis.version>
+    <mybatis.version>3.5.6</mybatis.version>
     <junit.version>4.12</junit.version>
   </properties>
   
